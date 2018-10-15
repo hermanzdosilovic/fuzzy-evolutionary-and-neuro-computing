@@ -5,79 +5,97 @@
 #include <tuple>
 #include <vector>
 #include <algorithm>
+#include <ostream>
 
 namespace fuzzy
 {
 
-namespace internal
-{
-
-template< typename T >
-constexpr T abs( T const n ) { return n < 0 ? -n : n; }
-
-}
+using value_type = std::int32_t;
+using element_type = std::vector< value_type >;
+using elements = std::vector< element_type >;
 
 class Domain
 {
 public:
-    using element_type = std::int32_t;
-    using value_type   = std::tuple< std::int32_t >;
-
-    class iterator : public std::iterator< std::input_iterator_tag, value_type, std::size_t, value_type const *, value_type const >
+    Domain( value_type const lowerBound, value_type const upperBound )
     {
-    public:
-        constexpr explicit iterator( element_type const value ) : value_{ value } {}
-
-        iterator & operator++()
+        for ( value_type i{ lowerBound }; i < upperBound; ++i )
         {
-            value_++;
-            return *this;
+            elements_.push_back( { i } );
         }
-
-        iterator operator++( int )
-        {
-            iterator copy{ *this };
-            ++( *this );
-            return copy;
-        }
-
-        constexpr bool operator==( iterator const & other ) const { return value_ == other.value_; }
-
-        constexpr bool operator!=( iterator const & other ) const { return !( *this == other ); }
-
-        constexpr reference operator*() const { return value_; }
-
-    private:
-        element_type value_;
-    };
-
-    constexpr Domain
-    (
-        element_type lowerBound,
-        element_type upperBound
-    ) :
-        lowerBound_{ lowerBound },
-        upperBound_{ upperBound },
-        size_{ static_cast< std::size_t >( internal::abs( upperBound - lowerBound ) ) }
-    {
-        assert( lowerBound <= upperBound );
     }
 
-    constexpr value_type operator[]( std::size_t const index ) const
+    Domain( Domain & first, Domain & second )
     {
-        assert( index < size_ );
-        return lowerBound_ + index;
+        for ( auto & a : first )
+        {
+            for ( auto & b : second )
+            {
+                element_type e;
+                for ( auto & v : a ) { e.emplace_back( v ); }
+                for ( auto & v : b ) { e.emplace_back( v ); }
+                elements_.emplace_back( e );
+            }
+        }
     }
 
-    constexpr std::size_t size() const { return size_; }
+    element_type operator[]( std::size_t const index )
+    {
+        assert( index < size() );
+        return elements_[ index ];
+    }
 
-    constexpr iterator begin() const { return iterator{ lowerBound_ }; }
-    constexpr iterator end()   const { return iterator{ upperBound_ }; }
+    std::size_t index( element_type const & element )
+    {
+        return std::distance
+        (
+            std::begin( elements_ ),
+            std::find( std::begin( elements_ ), std::end( elements_ ), element )
+        );
+    }
+
+    Domain operator*( Domain & other ) { return Domain{ *this, other }; }
+
+    std::size_t size() { return std::size( elements_ ); }
+
+    elements::iterator begin() { return std::begin( elements_ ); }
+    elements::iterator end()   { return std::end  ( elements_ ); }
 
 private:
-    element_type lowerBound_{ 0 };
-    element_type upperBound_{ 0 };
-    std::size_t size_{ 0 };
+    elements elements_;
 };
 
+}
+
+template< typename T >
+std::ostream & operator<<( std::ostream & ostream, std::vector< T > const & vector )
+{
+    std::size_t i{ 0 };
+    ostream << '(';
+    for ( auto & v : vector )
+    {
+        ostream << v;
+        if ( ++i < std::size( vector ) )
+        {
+            ostream << ", ";
+        }
+    }
+    ostream << ')';
+    return ostream;
+}
+
+std::ostream & operator<<( std::ostream & stream, fuzzy::Domain & domain )
+{
+    std::size_t i{ 0 };
+    stream << "{\n";
+    for ( auto & v : domain )
+    {
+        stream << "  " << v;
+        if ( ++i < domain.size() )
+        {
+            stream << ",\n";
+        }
+    }
+    stream << "\n}";
+    return stream;
 }

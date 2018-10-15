@@ -1,26 +1,29 @@
 #include <fuzzy/domain.hpp>
 
+#include <iostream>
+
 int main()
 {
-    constexpr fuzzy::Domain d1{ 0, 2 };
-    static_assert( std::size( d1 ) == 2 );
-    static_assert( d1[ 0 ] == std::make_tuple( 0 ) );
-    static_assert( d1[ 1 ] == std::make_tuple( 1 ) );
+    fuzzy::Domain d1{ 0, 5 };
+    std::cout << "Elements of domain d1:\n" << d1 << '\n';
+    std::cout << "Cardinality of domain d1: " << d1.size() << '\n';
 
-    constexpr fuzzy::Domain d2{ 0, 3 };
-    static_assert( std::size( d2 ) == 3 );
-    static_assert( d2[ 0 ] == std::make_tuple( 0 ) );
-    static_assert( d2[ 1 ] == std::make_tuple( 1 ) );
-    static_assert( d2[ 2 ] == std::make_tuple( 2 ) );
+    std::cout << '\n';
 
-    constexpr auto it1{ std::begin( d1 ) };
-    static_assert( *it1 == d1[ 0 ] );
+    fuzzy::Domain d2{ 0, 3 };
+    std::cout << "Elements of domain d2:\n" << d2 << '\n';
+    std::cout << "Cardinality of domain d2: " << d2.size() << '\n';
 
-    auto it2{ std::begin( d2 ) };
-    assert( *it2 == d2[ 0 ] );
-    assert( *( it2++ ) == d2[ 0 ] );
-    assert( *it2 == d2[ 1 ] );
-    assert( *( ++it2 ) == d2[ 2 ] );
+    std::cout << '\n';
+
+    auto d3 = d1 * d2;
+    std::cout << "Elements of domain d3:\n" << d3 << '\n';
+    std::cout << "Cardinality of domain d3: " << d3.size() << '\n';
+
+    std::cout << d3[ 0  ] << '\n';
+    std::cout << d3[ 5  ] << '\n';
+    std::cout << d3[ 14 ] << '\n';
+    std::cout << d3.index( { 4, 1 } ) << '\n';
 
     return 0;
 }
