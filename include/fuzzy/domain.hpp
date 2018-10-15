@@ -12,6 +12,8 @@ namespace fuzzy
 
 class Domain
 {
+friend class Set;
+
 public:
     using value_type = std::int32_t;
     using element_type = std::vector< value_type >;
@@ -72,6 +74,12 @@ public:
 
 private:
     Domain() = default;
+    Domain( elements const & elements ) : elements_{ std::begin( elements ), std::end( elements ) }
+    {
+        std::sort( std::begin( elements_ ), std::end( elements_ ) );
+        auto last = std::unique( std::begin( elements_ ), std::end( elements_ ) );
+        elements_.erase( last, std::end( elements_ ) );
+    }
 
     elements elements_;
 };

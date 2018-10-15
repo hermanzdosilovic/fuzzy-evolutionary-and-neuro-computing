@@ -27,12 +27,12 @@ public:
 
     static Set const Universal()
     {
-        Set set{ Domain::Empty() };
+        Set set;
         set.is_universal_ = true;
         return set;
     }
 
-    static Set const Empty() { return { Domain::Empty() }; }
+    static Set const Empty() { return {}; }
 
     double & operator[]( Domain::element_type const & element )
     {
@@ -109,7 +109,7 @@ public:
         {
             if ( ( *this )[ e ] == 1.0 )
             {
-                core.insert( e );
+                core << e;
             }
         }
         return core;
@@ -122,13 +122,33 @@ public:
         {
             if ( ( *this )[ e ] > 0 )
             {
-                support.insert( e );
+                support << e;
             }
         }
         return support;
     }
 
+    crisp::Set alphaCut( double const alpha )
+    {
+        crisp::Set cut;
+        for ( auto const & e : *this )
+        {
+            if ( ( *this )[ e ] >= alpha )
+            {
+                cut << e;
+            }
+        }
+        return cut;
+    }
+
+    static Set product( double const alpha, crisp::Set set )
+    {
+        return { set, [ alpha ]( Domain::element_type const & ) { return alpha; } };
+    }
+
     double height() const { return size() == 0 ? 0 : *std::max_element( std::begin( membership_ ), std::end( membership_ ) ); }
+
+    double is_normal() const { return height() == 1.0; }
 
     std::size_t size() const { return std::size( domain_ ); }
 
