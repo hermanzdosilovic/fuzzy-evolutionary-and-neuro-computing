@@ -10,13 +10,13 @@
 namespace fuzzy
 {
 
-using value_type = std::int32_t;
-using element_type = std::vector< value_type >;
-using elements = std::vector< element_type >;
-
 class Domain
 {
 public:
+    using value_type = std::int32_t;
+    using element_type = std::vector< value_type >;
+    using elements = std::vector< element_type >;
+
     Domain() = default;
 
     Domain( value_type const lowerBound, value_type const upperBound )
@@ -45,13 +45,13 @@ public:
         }
     }
 
-    element_type const & operator[]( std::size_t const index )
+    element_type const & operator[]( std::size_t const index ) const
     {
         assert( index < size() );
         return elements_[ index ];
     }
 
-    std::size_t index( element_type const & element )
+    std::size_t index( element_type const & element ) const
     {
         return std::distance
         (
@@ -90,18 +90,18 @@ std::ostream & operator<<( std::ostream & ostream, std::vector< T > const & vect
     return ostream;
 }
 
-std::ostream & operator<<( std::ostream & stream, fuzzy::Domain & domain )
+std::ostream & operator<<( std::ostream & ostream, fuzzy::Domain const & domain )
 {
     std::size_t i{ 0 };
-    stream << "{\n";
+    ostream << "{\n";
     for ( auto const & e : domain )
     {
-        stream << "  " << e;
+        ostream << "  " << e;
         if ( ++i < std::size( domain ) )
         {
-            stream << ",\n";
+            ostream << ",\n";
         }
     }
-    stream << "\n}";
-    return stream;
+    ostream << "\n}";
+    return ostream;
 }
