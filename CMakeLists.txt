@@ -10,5 +10,5 @@ target_include_directories( fenc INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include )
 add_library( fmt INTERFACE )
 target_include_directories( fmt INTERFACE ${CMAKE_CURRENT_LIST_DIR}/third_party/fmt/include )
 
-add_executable( h01t01 ${CMAKE_CURRENT_LIST_DIR}/src/homework_01/task_01/main.cpp )
-target_link_libraries( h01t01 PRIVATE fmt fenc )
+add_executable( hw01t01 ${CMAKE_CURRENT_LIST_DIR}/src/homework_01/task_01/main.cpp )
+target_link_libraries( hw01t01 PRIVATE fmt fenc )

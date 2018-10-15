@@ -1,11 +1,11 @@
 #pragma once
 
-#include <cassert>
-#include <cstdint>
-#include <tuple>
-#include <vector>
 #include <algorithm>
+#include <cassert>
+#include <cstddef>
+#include <cstdint>
 #include <ostream>
+#include <vector>
 
 namespace fuzzy
 {
@@ -17,29 +17,35 @@ using elements = std::vector< element_type >;
 class Domain
 {
 public:
+    Domain() = default;
+
     Domain( value_type const lowerBound, value_type const upperBound )
     {
+        assert( lowerBound <= upperBound );
+        elements_.reserve( std::abs( upperBound - lowerBound ) );
         for ( value_type i{ lowerBound }; i < upperBound; ++i )
         {
             elements_.push_back( { i } );
         }
     }
 
-    Domain( Domain & first, Domain & second )
+    Domain( Domain const & first, Domain const & second )
     {
-        for ( auto & a : first )
+        elements_.reserve( std::size( first ) * std::size( second ) );
+        for ( auto const & a : first )
         {
-            for ( auto & b : second )
+            for ( auto const & b : second )
             {
                 element_type e;
-                for ( auto & v : a ) { e.emplace_back( v ); }
-                for ( auto & v : b ) { e.emplace_back( v ); }
+                e.reserve( std::size( a ) + std::size( b ) );
+                for ( auto const & v : a ) { e.emplace_back( v ); }
+                for ( auto const & v : b ) { e.emplace_back( v ); }
                 elements_.emplace_back( e );
             }
         }
     }
 
-    element_type operator[]( std::size_t const index )
+    element_type const & operator[]( std::size_t const index )
     {
         assert( index < size() );
         return elements_[ index ];
@@ -54,12 +60,12 @@ public:
         );
     }
 
-    Domain operator*( Domain & other ) { return Domain{ *this, other }; }
+    Domain operator*( Domain const & other ) { return Domain{ *this, other }; }
 
-    std::size_t size() { return std::size( elements_ ); }
+    std::size_t size() const { return std::size( elements_ ); }
 
-    elements::iterator begin() { return std::begin( elements_ ); }
-    elements::iterator end()   { return std::end  ( elements_ ); }
+    elements::const_iterator begin() const { return std::begin( elements_ ); }
+    elements::const_iterator end()   const { return std::end  ( elements_ ); }
 
 private:
     elements elements_;
@@ -72,9 +78,9 @@ std::ostream & operator<<( std::ostream & ostream, std::vector< T > const & vect
 {
     std::size_t i{ 0 };
     ostream << '(';
-    for ( auto & v : vector )
+    for ( auto & e : vector )
     {
-        ostream << v;
+        ostream << e;
         if ( ++i < std::size( vector ) )
         {
             ostream << ", ";
@@ -88,10 +94,10 @@ std::ostream & operator<<( std::ostream & stream, fuzzy::Domain & domain )
 {
     std::size_t i{ 0 };
     stream << "{\n";
-    for ( auto & v : domain )
+    for ( auto const & e : domain )
     {
-        stream << "  " << v;
-        if ( ++i < domain.size() )
+        stream << "  " << e;
+        if ( ++i < std::size( domain ) )
         {
             stream << ",\n";
         }
