@@ -1,7 +1,9 @@
 #pragma once
 
+#include "crisp/set.hpp"
 #include "domain.hpp"
 
+#include <algorithm>
 #include <cstddef>
 #include <ostream>
 #include <vector>
@@ -99,6 +101,34 @@ public:
     bool is_universal() const { return is_universal_; }
 
     bool is_empty() const { return std::size( domain_ ) == 0 && !is_universal_; }
+
+    crisp::Set core() const
+    {
+        crisp::Set core;
+        for ( auto const & e : *this )
+        {
+            if ( ( *this )[ e ] == 1.0 )
+            {
+                core.insert( e );
+            }
+        }
+        return core;
+    }
+
+    crisp::Set support() const
+    {
+        crisp::Set support;
+        for ( auto const & e : *this )
+        {
+            if ( ( *this )[ e ] > 0 )
+            {
+                support.insert( e );
+            }
+        }
+        return support;
+    }
+
+    double height() const { return size() == 0 ? 0 : *std::max_element( std::begin( membership_ ), std::end( membership_ ) ); }
 
     std::size_t size() const { return std::size( domain_ ); }
 
