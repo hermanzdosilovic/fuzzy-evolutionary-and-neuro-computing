@@ -23,6 +23,15 @@ public:
         }
     }
 
+    static Set const Universal()
+    {
+        Set set{ Domain::Empty() };
+        set.is_universal_ = true;
+        return set;
+    }
+
+    static Set const Empty() { return { Domain::Empty() }; }
+
     double & operator[]( Domain::element_type const & element )
     {
         auto index{ domain_.index( element ) };
@@ -33,7 +42,7 @@ public:
     double operator[]( Domain::element_type const & element ) const
     {
         auto index{ domain_.index( element ) };
-        if ( index >= std::size( membership_ ) ) { return 0; }
+        if ( index >= std::size( membership_ ) ) { return is_universal_; }
         return membership_[ index ];
     }
 
@@ -60,14 +69,48 @@ public:
 
     bool operator!=( Set const & other ) const { return !( *this == other ); }
 
+    bool operator<=( Set const & other ) const
+    {
+        for ( auto const & e : *this )
+        {
+            if ( other[ e ] < ( *this )[ e ] )
+            {
+                return false;
+            }
+        }
+
+        for ( auto const & e : other )
+        {
+            if ( other[ e ] < ( *this )[ e ] )
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    bool operator>=( Set const & other ) const
+    {
+        if ( other == *this ) { return true; }
+        return !( *this <= other );
+    }
+
+    bool is_universal() const { return is_universal_; }
+
+    bool is_empty() const { return std::size( domain_ ) == 0 && !is_universal_; }
+
     std::size_t size() const { return std::size( domain_ ); }
 
     Domain::elements::const_iterator begin() const { return std::begin( domain_ ); }
     Domain::elements::const_iterator end()   const { return std::end  ( domain_ ); }
 
 private:
+    Set() = default;
+
     Domain domain_;
     std::vector< double > membership_;
+    bool is_universal_{ false };
 };
 
 }

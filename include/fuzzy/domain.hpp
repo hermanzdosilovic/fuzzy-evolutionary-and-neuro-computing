@@ -17,8 +17,6 @@ public:
     using element_type = std::vector< value_type >;
     using elements = std::vector< element_type >;
 
-    Domain() = default;
-
     Domain( value_type const lowerBound, value_type const upperBound )
     {
         assert( lowerBound <= upperBound );
@@ -44,6 +42,8 @@ public:
             }
         }
     }
+
+    static Domain const Empty() { return {}; }
 
     element_type const & operator[]( std::size_t const index ) const
     {
@@ -71,6 +71,8 @@ public:
     elements::const_iterator end()   const { return std::end  ( elements_ ); }
 
 private:
+    Domain() = default;
+
     elements elements_;
 };
 
