@@ -23,18 +23,6 @@ public:
         }
     }
 
-    double & operator[]( std::size_t const index )
-    {
-        assert( index < std::size( membership_ ) );
-        return membership_[ index ];
-    }
-
-    double operator[]( std::size_t const index ) const
-    {
-        assert( index < std::size( membership_ ) );
-        return membership_[ index ];
-    }
-
     double & operator[]( Domain::element_type const & element )
     {
         auto index{ domain_.index( element ) };
@@ -45,9 +33,32 @@ public:
     double operator[]( Domain::element_type const & element ) const
     {
         auto index{ domain_.index( element ) };
-        assert( index < std::size( membership_ ) );
+        if ( index >= std::size( membership_ ) ) { return 0; }
         return membership_[ index ];
     }
+
+    bool operator==( Set const & other ) const
+    {
+        for ( auto const & e : *this )
+        {
+            if ( other[ e ] != ( *this )[ e ] )
+            {
+                return false;
+            }
+        }
+
+        for ( auto const & e : other )
+        {
+            if ( other[ e ] != ( *this )[ e ] )
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    bool operator!=( Set const & other ) const { return !( *this == other ); }
 
     std::size_t size() const { return std::size( domain_ ); }
 

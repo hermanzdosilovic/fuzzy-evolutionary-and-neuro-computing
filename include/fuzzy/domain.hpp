@@ -60,7 +60,10 @@ public:
         );
     }
 
-    Domain operator*( Domain const & other ) { return Domain{ *this, other }; }
+    Domain operator*( Domain const & other ) const { return Domain{ *this, other }; }
+
+    bool operator==( Domain const & other ) const { return elements_ == other.elements_; }
+    bool operator!=( Domain const & other ) const { return !( *this == other ); }
 
     std::size_t size() const { return std::size( elements_ ); }
 
