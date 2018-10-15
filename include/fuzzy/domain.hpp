@@ -45,6 +45,14 @@ public:
         }
     }
 
+    Domain( elements const & elements ) : elements_{ std::begin( elements ), std::end( elements ) }
+    {
+        std::sort( std::begin( elements_ ), std::end( elements_ ) );
+        auto last = std::unique( std::begin( elements_ ), std::end( elements_ ) );
+        elements_.erase( last, std::end( elements_ ) );
+    }
+
+
     static Domain const Empty() { return {}; }
 
     element_type const & operator[]( std::size_t const index ) const
@@ -67,6 +75,12 @@ public:
     bool operator==( Domain const & other ) const { return elements_ == other.elements_; }
     bool operator!=( Domain const & other ) const { return !( *this == other ); }
 
+    Domain operator+( Domain const & other ) const
+    {
+        elements e{ std::begin( other ), std::end( other ) };
+        e.insert( std::end( e ), std::begin( *this ), std::end( *this ) );
+        return e;
+    }
     std::size_t size() const { return std::size( elements_ ); }
 
     elements::const_iterator begin() const { return std::begin( elements_ ); }
@@ -74,13 +88,6 @@ public:
 
 private:
     Domain() = default;
-    Domain( elements const & elements ) : elements_{ std::begin( elements ), std::end( elements ) }
-    {
-        std::sort( std::begin( elements_ ), std::end( elements_ ) );
-        auto last = std::unique( std::begin( elements_ ), std::end( elements_ ) );
-        elements_.erase( last, std::end( elements_ ) );
-    }
-
     elements elements_;
 };
 

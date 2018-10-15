@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <numeric>
 #include <ostream>
 #include <vector>
 
@@ -151,6 +152,10 @@ public:
     double is_normal() const { return height() == 1.0; }
 
     std::size_t size() const { return std::size( domain_ ); }
+
+    double cardinality() const { return std::accumulate( std::begin( membership_ ), std::end( membership_ ), 0 ); }
+
+    Domain const & domain() const { return domain_; }
 
     Domain::elements::const_iterator begin() const { return std::begin( domain_ ); }
     Domain::elements::const_iterator end()   const { return std::end  ( domain_ ); }
