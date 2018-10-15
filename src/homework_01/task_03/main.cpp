@@ -1,4 +1,5 @@
 #include <fuzzy/function.hpp>
+#include <fuzzy/hamacher.hpp>
 #include <fuzzy/set.hpp>
 #include <fuzzy/zadeh.hpp>
 
@@ -71,6 +72,15 @@ int main()
     fuzzy::Set intersectionSet{ fuzzy::zadeh::operator&( set1, notSet1 ) };
     std::cout << "Set1 intersection notSet1:\n" << intersectionSet << '\n';
 
+    std::cout << '\n';
+
+    fuzzy::Set hinters{ fuzzy::hamacher::tNorm( set1, notSet1, 1.0 ) };
+    std::cout << "Set1 intersection with notSet1 using parametrised Hamacher T norm with parameter 1.0:\n" << hinters << '\n';
+
+    std::cout << '\n';
+
+    fuzzy::Set hinters2{ fuzzy::hamacher::sNorm( set1, notSet1, 1.0 ) };
+    std::cout << "Set1 union with notSet1 using parametrised Hamacher S norm with parameter 1.0:\n" << hinters2 << '\n';
     return 0;
 }
 
