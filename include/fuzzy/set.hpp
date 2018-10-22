@@ -99,6 +99,40 @@ public:
         return !( *this <= other );
     }
 
+    Set operator*( Set const & other ) const
+    {
+        assert( std::size( domain_.components() ) == 2 );
+        assert( std::size( other.domain_.components() ) == 2 );
+        assert( domain_.components()[ 1 ] == other.domain_.components()[ 0 ] );
+
+        auto const & X = domain_.components()[ 0 ];
+        auto const & Y = domain_.components()[ 1 ];
+        auto const & Z = other.domain_.components()[ 1 ];
+
+        Set result{ X * Z };
+
+        for ( auto const & x : X )
+        {
+            for ( auto const & z : Z )
+            {
+                for ( auto const & y : Y )
+                {
+                    result[ { x[ 0 ], z[ 0 ] } ] = std::max
+                    (
+                        result[ { x[ 0 ], z[ 0 ] } ],
+                        std::min
+                        (
+                            ( *this )[ { x[ 0 ], y[ 0 ] } ],
+                            other[ { y[ 0 ], z[ 0 ] } ]
+                        )
+                    );
+                }
+            }
+        }
+
+        return result;
+    }
+
     bool is_universal() const { return is_universal_; }
 
     bool is_empty() const { return std::size( domain_ ) == 0 && !is_universal_; }

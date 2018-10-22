@@ -21,3 +21,6 @@ target_link_libraries( hw01t03 PRIVATE fenc )
 
 add_executable( hw02t01 ${CMAKE_CURRENT_LIST_DIR}/src/homework_02/task_01/main.cpp )
 target_link_libraries( hw02t01 PRIVATE fenc )
+
+add_executable( hw02t02 ${CMAKE_CURRENT_LIST_DIR}/src/homework_02/task_02/main.cpp )
+target_link_libraries( hw02t02 PRIVATE fenc )
