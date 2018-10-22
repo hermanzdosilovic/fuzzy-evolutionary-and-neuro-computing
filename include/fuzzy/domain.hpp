@@ -18,6 +18,7 @@ public:
     using value_type = std::int32_t;
     using element_type = std::vector< value_type >;
     using elements = std::vector< element_type >;
+    using domains = std::vector< Domain >;
 
     Domain( value_type const lowerBound, value_type const upperBound )
     {
@@ -43,6 +44,8 @@ public:
                 elements_.emplace_back( e );
             }
         }
+        components_.emplace_back( first );
+        components_.emplace_back( second );
     }
 
     Domain( elements const & elements ) : elements_{ std::begin( elements ), std::end( elements ) }
@@ -51,7 +54,6 @@ public:
         auto last = std::unique( std::begin( elements_ ), std::end( elements_ ) );
         elements_.erase( last, std::end( elements_ ) );
     }
-
 
     static Domain const Empty() { return {}; }
 
@@ -81,7 +83,10 @@ public:
         e.insert( std::end( e ), std::begin( *this ), std::end( *this ) );
         return e;
     }
+
     std::size_t size() const { return std::size( elements_ ); }
+
+    domains const & components() const { return components_; }
 
     elements::const_iterator begin() const { return std::begin( elements_ ); }
     elements::const_iterator end()   const { return std::end  ( elements_ ); }
@@ -89,6 +94,7 @@ public:
 private:
     Domain() = default;
     elements elements_;
+    domains components_;
 };
 
 }
