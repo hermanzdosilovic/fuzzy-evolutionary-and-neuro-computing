@@ -26,6 +26,18 @@ public:
         }
     }
 
+    Set( Set const & set ) :
+        domain_{ set.domain_ },
+        membership_{ set.membership_ },
+        is_universal_{ set.is_universal_ }
+    {}
+
+    Set( Set && set ) :
+        domain_{ std::move( set.domain_ ) },
+        membership_{ std::move( set.membership_ ) },
+        is_universal_{ set.is_universal_ }
+    {}
+
     static Set const Universal()
     {
         Set set;
@@ -99,6 +111,14 @@ public:
         return !( *this <= other );
     }
 
+    Set & operator=( Set other )
+    {
+        std::swap( domain_, other.domain_ );
+        std::swap( membership_, other.membership_ );
+        std::swap( is_universal_, other.is_universal_ );
+        return *this;
+    }
+
     Set operator*( Set const & other ) const
     {
         assert( std::size( domain_.components() ) == 2 );
@@ -131,6 +151,13 @@ public:
         }
 
         return result;
+    }
+
+    Set & operator*=( Set const & other )
+    {
+        auto result = *this * other;
+        *this = std::move( result );
+        return *this;
     }
 
     bool is_universal() const { return is_universal_; }

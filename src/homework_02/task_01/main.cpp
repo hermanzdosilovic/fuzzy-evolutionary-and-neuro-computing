@@ -54,8 +54,8 @@ int main()
     r4[ { 1, 3 } ] = 0.4;
 
     std::cout << "r1 je definiran nad UxU? " << std::boolalpha << fuzzy::relation::isUxURelation( r1 ) << '\n';
-    std::cout << "r1 je simetrična? " << std::boolalpha << fuzzy::relation::isSimetric( r1 ) << '\n';
-    std::cout << "r2 je simetrična? " << std::boolalpha << fuzzy::relation::isSimetric( r2 ) << '\n';
+    std::cout << "r1 je simetrična? " << std::boolalpha << fuzzy::relation::isSymmetric( r1 ) << '\n';
+    std::cout << "r2 je simetrična? " << std::boolalpha << fuzzy::relation::isSymmetric( r2 ) << '\n';
     std::cout << "r1 je refleksivna? " << std::boolalpha << fuzzy::relation::isReflexive( r1 ) << '\n';
     std::cout << "r3 je refleksivna? " << std::boolalpha << fuzzy::relation::isReflexive( r3 ) << '\n';
     std::cout << "r3 je max-min tranzitivna? " << std::boolalpha << fuzzy::relation::isMaxMinTransitive( r3 ) << '\n';

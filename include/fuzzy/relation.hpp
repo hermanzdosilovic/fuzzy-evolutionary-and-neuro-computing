@@ -24,7 +24,7 @@ bool isUxURelation( Set const & set )
     return components[ 0 ] == components[ 1 ];
 }
 
-bool isSimetric( Set const & set )
+bool isSymmetric( Set const & set )
 {
     if ( !isUxURelation( set ) )
     {
@@ -108,6 +108,11 @@ bool isMaxMinTransitive( Set const & set )
     }
 
     return true;
+}
+
+bool isEquivalence( Set const & set )
+{
+    return isReflexive( set ) && isSymmetric( set ) && isMaxMinTransitive( set );
 }
 
 }
