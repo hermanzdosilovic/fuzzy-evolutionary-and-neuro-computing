@@ -5,7 +5,7 @@
 
 int main()
 {
-    fuzzy::Domain d{ 0, 11 };
+    fuzzy::Domain d = fuzzy::Domain::Range( 0, 11 );
     fuzzy::Set set1{ d };
     set1[ { 0 } ] = 1.0;
     set1[ { 1 } ] = 0.8;
@@ -16,7 +16,7 @@ int main()
 
     std::cout << '\n';
 
-    fuzzy::Domain d2{ -5, 6 };
+    fuzzy::Domain d2 = fuzzy::Domain::Range( -5, 6 );
     fuzzy::Set set2{ d2, fuzzy::lambda( d2.index( { -4 } ), d2.index( { 0 } ), d2.index( { 4 } ) ) };
     // I think there is an error in homework instructions.
     // Following lamda parameters give output from instructions.

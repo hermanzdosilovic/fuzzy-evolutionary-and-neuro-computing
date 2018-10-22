@@ -4,13 +4,13 @@
 
 int main()
 {
-    fuzzy::Domain d1{ 0, 5 };
+    fuzzy::Domain d1 = fuzzy::Domain::Range( 0, 5 );
     std::cout << "Elements of domain d1:\n" << d1 << '\n';
     std::cout << "Cardinality of domain d1: " << std::size( d1 ) << '\n';
 
     std::cout << '\n';
 
-    fuzzy::Domain d2{ 0, 3 };
+    fuzzy::Domain d2 = fuzzy::Domain::Range( 0, 3 );
     std::cout << "Elements of domain d2:\n" << d2 << '\n';
     std::cout << "Cardinality of domain d2: " << std::size( d2 ) << '\n';
 

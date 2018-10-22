@@ -4,7 +4,7 @@
 
 int main()
 {
-    fuzzy::Domain u{ 1, 6 };
+    fuzzy::Domain u = fuzzy::Domain::Range( 1, 6 );
     auto u2 = u * u;
     std::cout << u2 << '\n';
 

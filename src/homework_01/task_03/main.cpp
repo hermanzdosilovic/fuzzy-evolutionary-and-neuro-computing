@@ -7,11 +7,11 @@
 
 int main()
 {
-    fuzzy::Domain d{ 0, 11 };
+    fuzzy::Domain d = fuzzy::Domain::Range( 0, 11 );
 
     // Scope for unrelated stuff of actual task.
     {
-        fuzzy::Domain d2{ -5, 5 };
+        fuzzy::Domain d2 = fuzzy::Domain::Range( -5, 5 );
 
         fuzzy::Set s1{ d };
         fuzzy::Set s2{ d2 };
