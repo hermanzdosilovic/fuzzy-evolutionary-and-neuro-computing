@@ -19,9 +19,12 @@ public:
 
     Domain() = default;
 
-    Domain( Domain const & other ) : elements_{ other.elements_ } {}
+    Domain( Domain const & other ) : elements_{ other.elements_ }, components_{ other.components_ } {}
 
-    Domain( Domain && other ) : elements_{ std::move( other.elements_ ) } {}
+    Domain( Domain && other ) :
+        elements_{ std::move( other.elements_ ) },
+        components_{ std::move( other.components_ ) }
+    {}
 
     Domain( elements const & elements ) : elements_{ elements }
     {
@@ -71,11 +74,45 @@ public:
                 result.elements_.emplace_back( e );
             }
         }
+
+        if ( std::empty( components_ ) )
+        {
+            result.components_.emplace_back( *this );
+        }
+        else
+        {
+            result.components_.insert
+            (
+                std::end( result.components_ ),
+                std::begin( components_ ), std::end( components_ )
+            );
+        }
+
+        if ( std::empty( other.components_ ) )
+        {
+            result.components_.emplace_back( other );
+        }
+        else
+        {
+            result.components_.insert
+            (
+                std::end( result.components_ ),
+                std::begin( other.components_ ), std::end( other.components_ )
+            );
+        }
+
         return result;
     }
 
     bool operator==( Domain const & other ) const { return elements_ == other.elements_; }
     bool operator!=( Domain const & other ) const { return !( *this == other ); }
+
+    Domain & operator=( Domain other )
+    {
+        std::swap( elements_, other.elements_ );
+        std::swap( components_, other.components_ );
+        return *this;
+    }
 
     Domain operator+( Domain const & other ) const
     {
@@ -89,8 +126,11 @@ public:
     elements::const_iterator begin() const { return std::begin( elements_ ); }
     elements::const_iterator end()   const { return std::end  ( elements_ ); }
 
+    std::vector< Domain > const & components() const { return components_; }
+
 private:
     elements elements_;
+    std::vector< Domain > components_;
 };
 
 }
@@ -100,7 +140,7 @@ std::ostream & operator<<( std::ostream & ostream, std::vector< T > const & vect
 {
     std::size_t i{ 0 };
     ostream << '(';
-    for ( auto & e : vector )
+    for ( auto const & e : vector )
     {
         ostream << e;
         if ( ++i < std::size( vector ) )
