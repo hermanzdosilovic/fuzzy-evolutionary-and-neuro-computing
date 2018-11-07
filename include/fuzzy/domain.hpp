@@ -47,6 +47,12 @@ public:
         return domain;
     }
 
+    static Domain const & Empty()
+    {
+        static const Domain empty{ Range( 0, 0 ) };
+        return empty;
+    }
+
     element_type const & operator[]( std::size_t const index ) const
     {
         assert( index < size() );

@@ -13,37 +13,44 @@ using Relation = Set;
 namespace relation
 {
 
-bool isBinary( Set const & set )
+bool isUnary( Relation const & r )
 {
-    return std::size( set.domain().components() ) == 2;
+    return std::size( r.domain().components() ) == 0;
 }
 
-bool isUxURelation( Set const & set )
+bool isBinary( Relation const & r )
 {
-    if ( !isBinary( set ) )
+    return std::size( r.domain().components() ) == 2;
+}
+
+bool isUxURelation( Relation const & r )
+{
+    if ( !isBinary( r ) )
     {
         return false;
     }
 
-    auto const & components{ set.domain().components() };
+    auto const & components{ r.domain().components() };
 
     return components[ 0 ] == components[ 1 ];
 }
 
-bool isSymmetric( Set const & set )
+bool isSymmetric( Relation const & r )
 {
-    if ( !isUxURelation( set ) )
+    if ( !isUxURelation( r ) )
     {
         return false;
     }
 
-    auto const & domain{ set.domain().components()[ 0 ] };
+    auto const & domain{ r.domain().components()[ 0 ] };
 
-    for ( auto const & x : domain )
+    for ( auto const & a : domain )
     {
-        for ( auto const & y : domain )
+        auto const & x{ a[ 0 ] };
+        for ( auto const & b : domain )
         {
-            if ( !( set[ { x[ 0 ], y[ 0 ] } ] == set[ { y[ 0 ], x[ 0 ] } ] ) )
+            auto const & y{ b[ 0 ] };
+            if ( !( r[ { x, y } ] == r[ { y, x } ] ) )
             {
                 return false;
             }
@@ -53,18 +60,19 @@ bool isSymmetric( Set const & set )
     return true;
 }
 
-bool isReflexive( Set const & set )
+bool isReflexive( Relation const & r )
 {
-    if ( !isUxURelation( set ) )
+    if ( !isUxURelation( r ) )
     {
         return false;
     }
 
-    auto const & domain{ set.domain().components()[ 0 ] };
+    auto const & domain{ r.domain().components()[ 0 ] };
 
-    for ( auto const & x : domain )
+    for ( auto const & a : domain )
     {
-        if ( !( set[ { x[ 0 ], x[ 0 ] } ] == 1.0 ) )
+        auto const & x{ a[ 0 ] };
+        if ( !( r[ { x, x } ] == 1.0 ) )
         {
             return false;
         }
@@ -73,14 +81,14 @@ bool isReflexive( Set const & set )
     return true;
 }
 
-bool isMaxMinTransitive( Set const & set )
+bool isMaxMinTransitive( Relation const & r )
 {
-    if ( !isUxURelation( set ) )
+    if ( !isUxURelation( r ) )
     {
         return false;
     }
 
-    auto const & domain = set.domain().components()[ 0 ];
+    auto const & domain = r.domain().components()[ 0 ];
 
     for ( auto const & a : domain )
     {
@@ -91,7 +99,7 @@ bool isMaxMinTransitive( Set const & set )
             for ( auto const & b : domain )
             {
                 auto const & y{ b[ 0 ] };
-                if ( !( set[ { x, z } ] >= std::min( set[ { x, y } ], set[ { y, z } ] ) ) )
+                if ( !( r[ { x, z } ] >= std::min( r[ { x, y } ], r[ { y, z } ] ) ) )
                 {
                     return false;
                 }
@@ -102,22 +110,24 @@ bool isMaxMinTransitive( Set const & set )
     return true;
 }
 
-bool isEquivalence( Set const & set )
+bool isEquivalence( Relation const & r )
 {
-    return isReflexive( set ) && isSymmetric( set ) && isMaxMinTransitive( set );
+    return isReflexive( r ) && isSymmetric( r ) && isMaxMinTransitive( r );
 }
 
 Relation composition( Relation const & r1, Relation const & r2 )
 {
-    assert( std::size( r1.domain().components() ) == 2 );
-    assert( std::size( r2.domain().components() ) == 2 );
-    assert( r1.domain().components()[ 1 ] == r2.domain().components()[ 0 ] );
+    auto const r1IsUnary{ isUnary( r1 ) };
 
-    auto const & X{ r1.domain().components()[ 0 ] };
-    auto const & Y{ r1.domain().components()[ 1 ] };
+    assert( r1IsUnary || isBinary( r1 ) );
+    assert( isBinary( r2 ) );
+    assert( ( r1IsUnary ? r1.domain() : r1.domain().components()[ 1 ] ) == r2.domain().components()[ 0 ] );
+
+    auto const & X{ r1IsUnary ? r1.domain() : r1.domain().components()[ 0 ] };
+    auto const & Y{ r2.domain().components()[ 0 ] };
     auto const & Z{ r2.domain().components()[ 1 ] };
 
-    Relation result{ X * Z };
+    Relation result{ r1IsUnary ? Z : X * Z };
 
     for ( auto const & a : X )
     {
@@ -128,7 +138,16 @@ Relation composition( Relation const & r1, Relation const & r2 )
             for ( auto const & b : Y )
             {
                 auto const & y{ b[ 0 ] };
-                result[ { x, z } ] = std::max( result[ { x, z } ], std::min( r1[ { x, y } ], r2[ { y, z } ] ) );
+                result[ r1IsUnary ? Domain::element_type{ z } : Domain::element_type{ x, z } ] =
+                    std::max
+                    (
+                        result[ r1IsUnary ? Domain::element_type{ z } : Domain::element_type{ x, z } ],
+                        std::min
+                        (
+                            r1[ r1IsUnary ? Domain::element_type{ y } : Domain::element_type{ x, y } ],
+                            r2[ { y, z } ]
+                        )
+                    );
             }
         }
     }
