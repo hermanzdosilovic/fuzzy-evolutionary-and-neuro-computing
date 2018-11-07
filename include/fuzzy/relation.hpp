@@ -136,6 +136,12 @@ Relation composition( Relation const & r1, Relation const & r2 )
     return result;
 }
 
+double height( Relation const & r )
+{
+    assert( isBinary( r ) );
+    return r.height();
+}
+
 }
 
 }

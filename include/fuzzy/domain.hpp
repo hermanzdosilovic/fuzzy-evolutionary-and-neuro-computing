@@ -137,6 +137,20 @@ private:
     std::vector< Domain > components_;
 };
 
+namespace domain
+{
+
+Domain::element_type join_elements( Domain::element_type const & a, Domain::element_type const & b )
+{
+    Domain::element_type e;
+    e.reserve( std::size( a ) + std::size( b ) );
+    e.insert( std::end( e ), std::begin( a ), std::end( a ) );
+    e.insert( std::end( e ), std::begin( b ), std::end( b ) );
+    return e;
+}
+
+}
+
 }
 
 template< typename T >

@@ -123,6 +123,31 @@ public:
         return *this;
     }
 
+    Set & operator*=( Set const & other )
+    {
+        auto const & self{ *this };
+
+        Set result{ domain_ * other.domain_ };
+        for ( auto const & x : domain_ )
+        {
+            for ( auto const & y : other.domain_ )
+            {
+                result[ domain::join_elements( x, y ) ] = std::min( self[ x ], other[ y ] );
+            }
+        }
+
+        *this = std::move( result );
+
+        return *this;
+    }
+
+    Set operator*( Set const & other )
+    {
+        Set result{ *this };
+        result *= other;
+        return result;
+    }
+
     bool isUniversal() const { return isUniversal_; }
 
     bool is_empty() const { return std::size( domain_ ) == 0 && !isUniversal_; }
