@@ -1,15 +1,14 @@
 #include <fuzzy/domain.hpp>
 #include <fuzzy/relation.hpp>
-#include <fuzzy/set.hpp>
 
 #include <iostream>
 
 int main()
 {
-    fuzzy::Domain u = fuzzy::Domain::Range( 1, 6 );
-    auto u2 = u * u;
+    fuzzy::Domain const u{ fuzzy::Domain::Range( 1, 6 ) };
+    auto const u2{ u * u };
 
-    fuzzy::Set r1{ u2 };
+    fuzzy::Relation r1{ u2 };
     r1[ { 1, 1 } ] = 1.0;
     r1[ { 2, 2 } ] = 1.0;
     r1[ { 3, 3 } ] = 1.0;
@@ -18,7 +17,7 @@ int main()
     r1[ { 3, 1 } ] = 0.5;
     r1[ { 1, 3 } ] = 0.5;
 
-    fuzzy::Set r2{ u2 };
+    fuzzy::Relation r2{ u2 };
     r2[ { 1, 1 } ] = 1.0;
     r2[ { 2, 2 } ] = 1.0;
     r2[ { 3, 3 } ] = 1.0;
@@ -27,7 +26,7 @@ int main()
     r2[ { 3, 1 } ] = 0.5;
     r2[ { 1, 3 } ] = 0.1;
 
-    fuzzy::Set r3{ u2 };
+    fuzzy::Relation r3{ u2 };
     r3[ { 1, 1 } ] = 1.0;
     r3[ { 2, 2 } ] = 1.0;
     r3[ { 3, 3 } ] = 0.3;
@@ -40,7 +39,7 @@ int main()
     r3[ { 3, 1 } ] = 0.5;
     r3[ { 1, 3 } ] = 0.5;
 
-    fuzzy::Set r4{ u2 };
+    fuzzy::Relation r4{ u2 };
     r4[ { 1, 1 } ] = 1.0;
     r4[ { 2, 2 } ] = 1.0;
     r4[ { 3, 3 } ] = 1.0;

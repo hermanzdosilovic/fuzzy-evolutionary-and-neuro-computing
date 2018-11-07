@@ -13,9 +13,9 @@ namespace fuzzy
 class Domain
 {
 public:
-    using value_type = std::int32_t;
+    using value_type   = std::int32_t;
     using element_type = std::vector< value_type >;
-    using elements = std::vector< element_type >;
+    using elements     = std::vector< element_type >;
 
     Domain() = default;
 
@@ -34,13 +34,16 @@ public:
 
     static Domain Range( value_type const lowerBound, value_type const upperBound )
     {
-        Domain domain;
         assert( lowerBound <= upperBound );
+
+        Domain domain;
         domain.elements_.reserve( std::abs( upperBound - lowerBound ) );
-        for ( value_type i{ lowerBound }; i < upperBound; ++i )
+
+        for ( auto i{ lowerBound }; i < upperBound; ++i )
         {
             domain.elements_.push_back( { i } );
         }
+
         return domain;
     }
 
@@ -63,6 +66,7 @@ public:
     {
         Domain result;
         result.elements_.reserve( size() * other.size() );
+
         for ( auto const & a : *this )
         {
             for ( auto const & b : other )
@@ -126,7 +130,7 @@ public:
     elements::const_iterator begin() const { return std::begin( elements_ ); }
     elements::const_iterator end()   const { return std::end  ( elements_ ); }
 
-    std::vector< Domain > const & components() const { return components_; }
+    auto const & components() const { return components_; }
 
 private:
     elements elements_;
@@ -138,7 +142,8 @@ private:
 template< typename T >
 std::ostream & operator<<( std::ostream & ostream, std::vector< T > const & vector )
 {
-    std::size_t i{ 0 };
+    auto i{ 0u };
+
     ostream << '(';
     for ( auto const & e : vector )
     {
@@ -149,12 +154,14 @@ std::ostream & operator<<( std::ostream & ostream, std::vector< T > const & vect
         }
     }
     ostream << ')';
+
     return ostream;
 }
 
 std::ostream & operator<<( std::ostream & ostream, fuzzy::Domain const & domain )
 {
-    std::size_t i{ 0 };
+    auto i{ 0u };
+
     ostream << "{\n";
     for ( auto const & e : domain )
     {
@@ -165,5 +172,6 @@ std::ostream & operator<<( std::ostream & ostream, fuzzy::Domain const & domain 
         }
     }
     ostream << "\n}";
+
     return ostream;
 }

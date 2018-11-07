@@ -29,19 +29,19 @@ public:
     Set( Set const & set ) :
         domain_{ set.domain_ },
         membership_{ set.membership_ },
-        is_universal_{ set.is_universal_ }
+        isUniversal_{ set.isUniversal_ }
     {}
 
     Set( Set && set ) :
         domain_{ std::move( set.domain_ ) },
         membership_{ std::move( set.membership_ ) },
-        is_universal_{ set.is_universal_ }
+        isUniversal_{ set.isUniversal_ }
     {}
 
-    static Set const Universal()
+    static Set const & Universal()
     {
-        Set set;
-        set.is_universal_ = true;
+        static Set set;
+        set.isUniversal_ = true;
         return set;
     }
 
@@ -57,15 +57,17 @@ public:
     double operator[]( Domain::element_type const & element ) const
     {
         auto index{ domain_.index( element ) };
-        if ( index >= std::size( membership_ ) ) { return is_universal_; }
+        if ( index >= std::size( membership_ ) ) { return isUniversal_; }
         return membership_[ index ];
     }
 
     bool operator==( Set const & other ) const
     {
-        for ( auto const & e : *this )
+        auto const & self{ *this };
+
+        for ( auto const & e : self )
         {
-            if ( other[ e ] != ( *this )[ e ] )
+            if ( other[ e ] != self[ e ] )
             {
                 return false;
             }
@@ -73,7 +75,7 @@ public:
 
         for ( auto const & e : other )
         {
-            if ( other[ e ] != ( *this )[ e ] )
+            if ( other[ e ] != self[ e ] )
             {
                 return false;
             }
@@ -86,9 +88,11 @@ public:
 
     bool operator<=( Set const & other ) const
     {
-        for ( auto const & e : *this )
+        auto const & self{ *this };
+
+        for ( auto const & e : self )
         {
-            if ( other[ e ] < ( *this )[ e ] )
+            if ( other[ e ] < self[ e ] )
             {
                 return false;
             }
@@ -96,7 +100,7 @@ public:
 
         for ( auto const & e : other )
         {
-            if ( other[ e ] < ( *this )[ e ] )
+            if ( other[ e ] < self[ e ] )
             {
                 return false;
             }
@@ -107,7 +111,7 @@ public:
 
     bool operator>=( Set const & other ) const
     {
-        if ( other == *this ) { return true; }
+        if ( *this == other ) { return true; }
         return !( *this <= other );
     }
 
@@ -115,91 +119,59 @@ public:
     {
         std::swap( domain_, other.domain_ );
         std::swap( membership_, other.membership_ );
-        std::swap( is_universal_, other.is_universal_ );
+        std::swap( isUniversal_, other.isUniversal_ );
         return *this;
     }
 
-    Set operator*( Set const & other ) const
-    {
-        assert( std::size( domain_.components() ) == 2 );
-        assert( std::size( other.domain_.components() ) == 2 );
-        assert( domain_.components()[ 1 ] == other.domain_.components()[ 0 ] );
+    bool isUniversal() const { return isUniversal_; }
 
-        auto const & X = domain_.components()[ 0 ];
-        auto const & Y = domain_.components()[ 1 ];
-        auto const & Z = other.domain_.components()[ 1 ];
-
-        Set result{ X * Z };
-
-        for ( auto const & x : X )
-        {
-            for ( auto const & z : Z )
-            {
-                for ( auto const & y : Y )
-                {
-                    result[ { x[ 0 ], z[ 0 ] } ] = std::max
-                    (
-                        result[ { x[ 0 ], z[ 0 ] } ],
-                        std::min
-                        (
-                            ( *this )[ { x[ 0 ], y[ 0 ] } ],
-                            other[ { y[ 0 ], z[ 0 ] } ]
-                        )
-                    );
-                }
-            }
-        }
-
-        return result;
-    }
-
-    Set & operator*=( Set const & other )
-    {
-        auto result = *this * other;
-        *this = std::move( result );
-        return *this;
-    }
-
-    bool is_universal() const { return is_universal_; }
-
-    bool is_empty() const { return std::size( domain_ ) == 0 && !is_universal_; }
+    bool is_empty() const { return std::size( domain_ ) == 0 && !isUniversal_; }
 
     crisp::Set core() const
     {
+        auto const & self{ *this };
+
         crisp::Set core;
-        for ( auto const & e : *this )
+        for ( auto const & e : self )
         {
-            if ( ( *this )[ e ] == 1.0 )
+            if ( self[ e ] == 1.0 )
             {
                 core << e;
             }
         }
+
         return core;
     }
 
     crisp::Set support() const
     {
+        auto const & self{ *this };
+
         crisp::Set support;
-        for ( auto const & e : *this )
+        for ( auto const & e : self )
         {
-            if ( ( *this )[ e ] > 0 )
+            if ( self[ e ] > 0 )
             {
                 support << e;
             }
         }
+
         return support;
     }
 
     crisp::Set alphaCut( double const alpha )
     {
+        auto const & self{ *this };
+
         crisp::Set cut;
-        for ( auto const & e : *this )
+        for ( auto const & e : self )
         {
-            if ( ( *this )[ e ] >= alpha )
+            if ( self[ e ] >= alpha )
             {
                 cut << e;
             }
         }
+
         return cut;
     }
 
@@ -216,7 +188,7 @@ public:
 
     double cardinality() const { return std::accumulate( std::begin( membership_ ), std::end( membership_ ), 0 ); }
 
-    Domain const & domain() const { return domain_; }
+    auto const & domain() const { return domain_; }
 
     Domain::elements::const_iterator begin() const { return std::begin( domain_ ); }
     Domain::elements::const_iterator end()   const { return std::end  ( domain_ ); }
@@ -226,7 +198,7 @@ private:
 
     Domain domain_;
     std::vector< double > membership_;
-    bool is_universal_{ false };
+    bool isUniversal_{ false };
 };
 
 }

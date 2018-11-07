@@ -35,10 +35,10 @@ int main()
         assert( s1 >= s2 );
 
         fuzzy::Set s3 = fuzzy::Set::Universal();
-        assert( s3.is_universal() == true );
+        assert( s3.isUniversal() == true );
 
-        assert( s1.is_universal() == false );
-        assert( s2.is_universal() == false );
+        assert( s1.isUniversal() == false );
+        assert( s2.isUniversal() == false );
 
         fuzzy::Set s4 = fuzzy::Set::Empty();
         assert( s1.is_empty() == false );
@@ -46,7 +46,7 @@ int main()
         assert( s3.is_empty() == false );
 
         assert( s4.is_empty() == true );
-        assert( s4.is_universal() == false );
+        assert( s4.isUniversal() == false );
     }
 
     fuzzy::Set set1{ d };
