@@ -41,11 +41,11 @@ int main()
         assert( s2.isUniversal() == false );
 
         fuzzy::Set s4 = fuzzy::Set::Empty();
-        assert( s1.is_empty() == false );
-        assert( s2.is_empty() == false );
-        assert( s3.is_empty() == false );
+        assert( s1.empty() == false );
+        assert( s2.empty() == false );
+        assert( s3.empty() == false );
 
-        assert( s4.is_empty() == true );
+        assert( s4.empty() == true );
         assert( s4.isUniversal() == false );
     }
 

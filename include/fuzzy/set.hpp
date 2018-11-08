@@ -1,7 +1,7 @@
 #pragma once
 
-#include "crisp/set.hpp"
-#include "domain.hpp"
+#include <crisp/set.hpp>
+#include <fuzzy/domain.hpp>
 
 #include <algorithm>
 #include <cstddef>
@@ -45,7 +45,11 @@ public:
         return set;
     }
 
-    static Set const Empty() { return {}; }
+    static Set const Empty()
+    {
+        static Set empty;
+        return empty;
+    }
 
     double & operator[]( Domain::element_type const & element )
     {
@@ -123,7 +127,7 @@ public:
         return *this;
     }
 
-    Set & operator*=( Set const & other )
+    Set & operator*=( Set const & other ) // NOTE: This is the same as fuzzy::implication< fuzzy::ImplicationType::ZADEH >.
     {
         auto const & self{ *this };
 
@@ -150,7 +154,7 @@ public:
 
     bool isUniversal() const { return isUniversal_; }
 
-    bool is_empty() const { return std::size( domain_ ) == 0 && !isUniversal_; }
+    bool empty() const { return std::size( domain_ ) == 0 && !isUniversal_; }
 
     crisp::Set core() const
     {
