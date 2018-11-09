@@ -80,27 +80,32 @@ Relation implication< ImplicationType::MAMDANI_PRODUCT >( Relation const & r1, R
     return detail::implication( r1, r2, []( double const x, double const y ){ return x * y; } );
 }
 
-Relation implication( Relation const & r1, Relation const & r2, ImplicationType const implicationType = ImplicationType::ZADEH )
+auto implication( ImplicationType const implicationType = ImplicationType::ZADEH )
 {
     switch ( implicationType )
     {
         case ImplicationType::KLEENE_DIENS:
-            return implication< ImplicationType::KLEENE_DIENS >( r1, r2 );
+            return implication< ImplicationType::KLEENE_DIENS >;
         case ImplicationType::LUKASIEWICZ:
-            return implication< ImplicationType::LUKASIEWICZ >( r1, r2 );
+            return implication< ImplicationType::LUKASIEWICZ >;
         case ImplicationType::ZADEH:
-            return implication< ImplicationType::ZADEH >( r1, r2 );
+            return implication< ImplicationType::ZADEH >;
         case ImplicationType::GODEL:
-            return implication< ImplicationType::GODEL >( r1, r2 );
+            return implication< ImplicationType::GODEL >;
         case ImplicationType::MAMDANI_MIN:
-            return implication< ImplicationType::MAMDANI_MIN >( r1, r2 );
+            return implication< ImplicationType::MAMDANI_MIN >;
         case ImplicationType::MAMDANI_PRODUCT:
-            return implication< ImplicationType::MAMDANI_PRODUCT >( r1, r2 );
+            return implication< ImplicationType::MAMDANI_PRODUCT >;
     }
 
 #ifdef __GNUC__
     __builtin_unreachable();
 #endif
+}
+
+Relation implication( Relation const & r1, Relation const & r2, ImplicationType const implicationType = ImplicationType::ZADEH )
+{
+    return implication( implicationType )( r1, r2 );
 }
 
 }

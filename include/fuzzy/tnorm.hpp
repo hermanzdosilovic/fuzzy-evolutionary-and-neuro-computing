@@ -55,27 +55,32 @@ double tnorm< TNormType::DRASTIC_PRODUCT >( double const x, double const y )
     return std::max( x, y ) == 1.0 ? std::min( x, y ) : 0.0;
 }
 
-double tnorm( double const x, double const y, TNormType const tNormType = TNormType::ZADEH_MIN )
+auto tnorm( TNormType const tNormType = TNormType::ZADEH_MIN )
 {
     switch ( tNormType )
     {
         case TNormType::ZADEH_MIN:
-            return tnorm< TNormType::ZADEH_MIN >( x, y );
+            return tnorm< TNormType::ZADEH_MIN >;
         case TNormType::HAMACHER_PRODUCT:
-            return tnorm< TNormType::HAMACHER_PRODUCT >( x, y );
+            return tnorm< TNormType::HAMACHER_PRODUCT >;
         case TNormType::ALGEBRAIC_PRODUCT:
-            return tnorm< TNormType::ALGEBRAIC_PRODUCT >( x, y );
+            return tnorm< TNormType::ALGEBRAIC_PRODUCT >;
         case TNormType::EINSTEIN_PRODUCT:
-            return tnorm< TNormType::EINSTEIN_PRODUCT >( x, y );
+            return tnorm< TNormType::EINSTEIN_PRODUCT >;
         case TNormType::CONSTAINED_PRODUCT:
-            return tnorm< TNormType::CONSTAINED_PRODUCT >( x, y );
+            return tnorm< TNormType::CONSTAINED_PRODUCT >;
         case TNormType::DRASTIC_PRODUCT:
-            return tnorm< TNormType::DRASTIC_PRODUCT >( x, y );
+            return tnorm< TNormType::DRASTIC_PRODUCT >;
     }
 
 #ifdef __GNUC__
     __builtin_unreachable();
 #endif
+}
+
+double tnorm( double const x, double const y, TNormType const tNormType = TNormType::ZADEH_MIN )
+{
+    return tnorm( tNormType )( x, y );
 }
 
 }

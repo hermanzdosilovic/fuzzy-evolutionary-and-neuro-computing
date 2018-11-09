@@ -55,27 +55,32 @@ double snorm< SNormType::DRASTIC_SUM >( double const x, double const y )
     return std::min( x, y ) == 0.0 ? std::max( x, y ) : 1.0;
 }
 
-double snorm( double const x, double const y, SNormType const sNormType = SNormType::ZADEH_MAX )
+auto snorm( SNormType const sNormType = SNormType::ZADEH_MAX )
 {
     switch ( sNormType )
     {
         case SNormType::ZADEH_MAX:
-            return snorm< SNormType::ZADEH_MAX >( x, y );
+            return snorm< SNormType::ZADEH_MAX >;
         case SNormType::HAMACHER_SUM:
-            return snorm< SNormType::HAMACHER_SUM >( x, y );
+            return snorm< SNormType::HAMACHER_SUM >;
         case SNormType::ALGEBRAIC_SUM:
-            return snorm< SNormType::ALGEBRAIC_SUM >( x, y );
+            return snorm< SNormType::ALGEBRAIC_SUM >;
         case SNormType::EINSTEIN_SUM:
-            return snorm< SNormType::EINSTEIN_SUM >( x, y );
+            return snorm< SNormType::EINSTEIN_SUM >;
         case SNormType::CONSTAINED_SUM:
-            return snorm< SNormType::CONSTAINED_SUM >( x, y );
+            return snorm< SNormType::CONSTAINED_SUM >;
         case SNormType::DRASTIC_SUM:
-            return snorm< SNormType::DRASTIC_SUM >( x, y );
+            return snorm< SNormType::DRASTIC_SUM >;
     }
 
 #ifdef __GNUC__
     __builtin_unreachable();
 #endif
+}
+
+double snorm( double const x, double const y, SNormType const sNormType = SNormType::ZADEH_MAX )
+{
+    return snorm( sNormType )( x, y );
 }
 
 }

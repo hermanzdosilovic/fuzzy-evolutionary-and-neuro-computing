@@ -2,8 +2,8 @@
 
 #include <fuzzy/inference/inference.hpp>
 #include <fuzzy/implication.hpp>
-#include <fuzzy/s_norm.hpp>
-#include <fuzzy/t_norm.hpp>
+#include <fuzzy/snorm.hpp>
+#include <fuzzy/tnorm.hpp>
 
 namespace fuzzy
 {
