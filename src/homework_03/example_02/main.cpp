@@ -1,6 +1,7 @@
 #include <fuzzy/domain.hpp>
 #include <fuzzy/implication.hpp>
 #include <fuzzy/set.hpp>
+#include <fuzzy/operation.hpp>
 
 #include <iostream>
 
@@ -19,6 +20,9 @@ int main()
     highVoltage[ { 3 } ] = 1.0;
 
     auto result{ fuzzy::implication< fuzzy::ImplicationType::ZADEH >( smallCurrent, highVoltage ) };
+    std::cout << result << '\n';
+
+    result = fuzzy::cross( smallCurrent, highVoltage );
     std::cout << result << '\n';
 
     return 0;

@@ -41,31 +41,31 @@ Relation implication( Relation const & r1, Relation const & r2, Function && f )
 
 }
 
-template< ImplicationType >
+template< ImplicationType implicationType >
 Relation implication( Relation const & r1, Relation const & r2 );
 
 template<>
 Relation implication< ImplicationType::KLEENE_DIENS >( Relation const & r1, Relation const & r2 )
 {
-    return detail::implication( r1, r2, []( double const x, double const y ){ return std::max( 1 - x, y ); } );
+    return detail::implication( r1, r2, []( double const x, double const y ){ return std::max( 1.0 - x, y ); } );
 }
 
 template<>
 Relation implication< ImplicationType::LUKASIEWICZ >( Relation const & r1, Relation const & r2 )
 {
-    return detail::implication( r1, r2, []( double const x, double const y ){ return std::max( std::min( x, y ), 1 - x ); } );
+    return detail::implication( r1, r2, []( double const x, double const y ){ return std::max( std::min( x, y ), 1.0 - x ); } );
 }
 
 template<>
 Relation implication< ImplicationType::ZADEH >( Relation const & r1, Relation const & r2 )
 {
-    return detail::implication( r1, r2, []( double const x, double const y ){ return std::max( std::min( x, y ), 1 - x ); } );
+    return detail::implication( r1, r2, []( double const x, double const y ){ return std::max( std::min( x, y ), 1.0 - x ); } );
 }
 
 template<>
 Relation implication< ImplicationType::GODEL >( Relation const & r1, Relation const & r2 )
 {
-    return detail::implication( r1, r2, []( double const x, double const y ){ return x <= y ? 1 : y; } );
+    return detail::implication( r1, r2, []( double const x, double const y ){ return x <= y ? 1.0 : y; } );
 }
 
 template<>
@@ -78,6 +78,12 @@ template<>
 Relation implication< ImplicationType::MAMDANI_PRODUCT >( Relation const & r1, Relation const & r2 )
 {
     return detail::implication( r1, r2, []( double const x, double const y ){ return x * y; } );
+}
+
+template< typename TNorm >
+Relation implication( Relation const & r1, Relation const & r2, TNorm && t )
+{
+    return detail::implication( r1, r2, t );
 }
 
 auto implication( ImplicationType const implicationType = ImplicationType::ZADEH )

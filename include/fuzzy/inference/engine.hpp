@@ -10,6 +10,7 @@ namespace fuzzy
 
 class Engine
 {
+public:
     constexpr Engine
     (
         InferenceType   const inferenceType,

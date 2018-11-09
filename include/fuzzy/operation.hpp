@@ -8,9 +8,15 @@
 namespace fuzzy
 {
 
-Relation cross( Relation const & r1, Relation const & r2 )
+template< typename TNorm >
+Relation cross( Relation const & r1, Relation const & r2, TNorm && t )
 {
-    return implication< ImplicationType::ZADEH >( r1, r2 );
+    return implication( r1, r2, t );
+}
+
+Relation cross( Relation const & r1, Relation const & r2, TNormType const tNormType = TNormType::ZADEH_MIN )
+{
+    return implication( r1, r2, tnorm( tNormType ) );
 }
 
 template< typename SNorm, typename TNorm >

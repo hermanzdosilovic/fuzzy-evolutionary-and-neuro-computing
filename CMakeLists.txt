@@ -35,5 +35,5 @@ target_link_libraries( hw03e01 PRIVATE fenc )
 add_executable( hw03e02 ${CMAKE_CURRENT_LIST_DIR}/src/homework_03/example_02/main.cpp )
 target_link_libraries( hw03e02 PRIVATE fenc )
 
-add_executable( hw03ship_controller ${CMAKE_CURRENT_LIST_DIR}/src/homework_03/ship_controller/main.cpp )
-target_link_libraries( hw03ship_controller PRIVATE fenc )
+add_executable( hw03t01 ${CMAKE_CURRENT_LIST_DIR}/src/homework_03/task_01/main.cpp )
+target_link_libraries( hw03t01 PRIVATE fenc )
