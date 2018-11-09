@@ -47,7 +47,7 @@ public:
     auto sNormType()       { return sNormType_; }
     auto tNormType()       { return tNormType_; }
 
-    Relation predict( Relation const & input ) const
+    Relation predict( Relation const & input, [[ maybe_unused ]] Relations const & relations ) const
     {
         return input;
     }

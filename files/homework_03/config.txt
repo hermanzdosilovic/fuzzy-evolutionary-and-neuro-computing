@@ -1,4 +1,4 @@
-../../build/hw03ship_controller
+../../build/hw03t01
 2
 20
 10

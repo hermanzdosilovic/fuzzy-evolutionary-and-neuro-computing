@@ -51,6 +51,13 @@ public:
         return empty;
     }
 
+    static Set Singleton( Domain::element_type const & element )
+    {
+        Set s{ element };
+        s[ element ] = 1.0;
+        return s;
+    }
+
     double & operator[]( Domain::element_type const & element )
     {
         auto index{ domain_.index( element ) };

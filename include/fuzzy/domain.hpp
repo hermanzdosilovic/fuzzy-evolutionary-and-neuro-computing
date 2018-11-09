@@ -29,6 +29,11 @@ public:
         components_{ std::move( other.components_ ) }
     {}
 
+    Domain( element_type const & element )
+    {
+        elements_.emplace_back( element );
+    }
+
     Domain( elements const & elements ) : elements_{ elements }
     {
         std::sort( std::begin( elements_ ), std::end( elements_ ) );

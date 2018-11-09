@@ -6,6 +6,8 @@
 #include <fuzzy/operation.hpp>
 
 #include <cstdint>
+#include <iterator>
+#include <numeric>
 #include <utility>
 #include <vector>
 
@@ -49,15 +51,85 @@ public:
 
     std::pair< std::int16_t, std::int16_t > maneuver
     (
-        [[ maybe_unused ]] std::int16_t leftDistance,
-        [[ maybe_unused ]] std::int16_t rightDistance,
-        [[ maybe_unused ]] std::int16_t upperLeftDistance,
-        [[ maybe_unused ]] std::int16_t upperRightDistance,
-        [[ maybe_unused ]] std::int16_t speed,
-        [[ maybe_unused ]] std::int8_t  direction
+        std::int16_t leftDistance,
+        std::int16_t rightDistance,
+        std::int16_t upperLeftDistance,
+        std::int16_t upperRightDistance,
+        std::int16_t speed,
+        std::int8_t  direction
     )
     {
-        return { 0, 10 };
+        fuzzy::Sets const inputs
+        {
+            fuzzy::Set::Singleton( { rightDistance      } ),
+            fuzzy::Set::Singleton( { upperLeftDistance  } ),
+            fuzzy::Set::Singleton( { upperRightDistance } ),
+            fuzzy::Set::Singleton( { speed              } ),
+            fuzzy::Set::Singleton( { direction          } )
+        };
+
+        fuzzy::Relation accelerationInput{ fuzzy::Set::Singleton( { leftDistance } ) };
+        fuzzy::Relation rudderInput{ accelerationInput };
+        for ( auto const & i : inputs )
+        {
+            accelerationInput = cross( accelerationInput, i, accelerationEngine_.tNormType() );
+            rudderInput       = cross( rudderInput      , i, rudderEngine_      .tNormType() );
+        }
+
+        auto const accelerationOutput{ accelerationEngine_.predict( accelerationInput, accelerationRelations_ ) };
+        auto const rudderOutput      { rudderEngine_      .predict( rudderInput      , rudderRelations_       ) };
+
+        double accelerationCenterOfArea
+        {
+            std::accumulate
+            (
+                std::begin( accelerationOutput ),
+                std::end  ( accelerationOutput ),
+                0.0,
+                [ & accelerationOutput ]( double const & current, fuzzy::Domain::element_type const & element )
+                {
+                    assert( std::size( element ) == 1 );
+                    return current + element[ 0 ] * accelerationOutput[ element ];
+                }
+            ) /
+            std::accumulate
+            (
+                std::begin( accelerationOutput ),
+                std::end  ( accelerationOutput ),
+                0.0,
+                [ & accelerationOutput ]( double const & current, fuzzy::Domain::element_type const & element )
+                {
+                    return current + accelerationOutput[ element ];
+                }
+            )
+        };
+
+        double rudderCenterOfArea
+        {
+            std::accumulate
+            (
+                std::begin( rudderOutput ),
+                std::end  ( rudderOutput ),
+                0.0,
+                [ & rudderOutput ]( double const & current, fuzzy::Domain::element_type const & element )
+                {
+                    assert( std::size( element ) == 1 );
+                    return current + element[ 0 ] * rudderOutput[ element ];
+                }
+            ) /
+            std::accumulate
+            (
+                std::begin( rudderOutput ),
+                std::end  ( rudderOutput ),
+                0.0,
+                [ & rudderOutput ]( double const & current, fuzzy::Domain::element_type const & element )
+                {
+                    return current + rudderOutput[ element ];
+                }
+            )
+        };
+
+        return { std::floor( accelerationCenterOfArea ), std::floor( rudderCenterOfArea ) };
     }
 
 private:
