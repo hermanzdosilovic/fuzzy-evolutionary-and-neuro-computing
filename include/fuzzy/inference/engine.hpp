@@ -1,8 +1,12 @@
 #pragma once
 
+#include <fuzzy/disjunction.hpp>
 #include <fuzzy/implication.hpp>
+#include <fuzzy/operation.hpp>
 #include <fuzzy/snorm.hpp>
 #include <fuzzy/tnorm.hpp>
+
+#include <iterator>
 
 namespace fuzzy
 {
@@ -49,7 +53,19 @@ public:
 
     Relation predict( Relation const & input, [[ maybe_unused ]] Relations const & relations ) const
     {
-        return input;
+        Relations results;
+        for ( auto const & i : relations )
+        {
+            results.emplace_back( composition( input, i, sNormType_, tNormType_ ) );
+        }
+
+        Relation output{ results[ 0 ] };
+        for ( std::size_t i{ 1 }; i < std::size( results ); ++i )
+        {
+            output = disjunction( output, results[ i ] );
+        }
+
+        return output;
     }
 
 private:
