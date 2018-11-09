@@ -13,7 +13,8 @@ Relation cross( Relation const & r1, Relation const & r2 )
     return implication< ImplicationType::ZADEH >( r1, r2 );
 }
 
-Relation composition( Relation const & r1, Relation const & r2, SNormType sNormType = SNormType::ZADEH_MAX, TNormType tnormType = TNormType::ZADEH_MIN )
+template< typename SNorm, typename TNorm >
+Relation composition( Relation const & r1, Relation const & r2, SNorm && s, TNorm && t )
 {
     auto const r1IsUnary{ relation::isUnary( r1 ) };
 
@@ -37,16 +38,14 @@ Relation composition( Relation const & r1, Relation const & r2, SNormType sNormT
             {
                 auto const & y{ b[ 0 ] };
                 result[ r1IsUnary ? Domain::element_type{ z } : Domain::element_type{ x, z } ] =
-                    snorm
+                    s
                     (
                         result[ r1IsUnary ? Domain::element_type{ z } : Domain::element_type{ x, z } ],
-                        tnorm
+                        t
                         (
                             r1[ r1IsUnary ? Domain::element_type{ y } : Domain::element_type{ x, y } ],
-                            r2[ { y, z } ],
-                            tnormType
-                        ),
-                        sNormType
+                            r2[ { y, z } ]
+                        )
                     );
             }
         }
@@ -55,5 +54,9 @@ Relation composition( Relation const & r1, Relation const & r2, SNormType sNormT
     return result;
 }
 
+Relation composition( Relation const & r1, Relation const & r2, SNormType sNormType = SNormType::ZADEH_MAX, TNormType tNormType = TNormType::ZADEH_MIN )
+{
+    return composition( r1, r2, snorm( sNormType ), tnorm( tNormType ) );
+}
 
 }
