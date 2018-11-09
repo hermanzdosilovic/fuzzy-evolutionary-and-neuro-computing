@@ -1,4 +1,5 @@
 #include <fuzzy/domain.hpp>
+#include <fuzzy/operation.hpp>
 #include <fuzzy/relation.hpp>
 
 #include <iostream>
@@ -22,7 +23,7 @@ int main()
     r2[ { 3, 3 } ] = 1.0;
     r2[ { 3, 4 } ] = 0.4;
 
-    std::cout << fuzzy::relation::composition( r1, r2 ) << '\n';
+    std::cout << fuzzy::composition( r1, r2 ) << '\n';
 
     return 0;
 }

@@ -1,3 +1,5 @@
+#include <fuzzy/domain.hpp>
+#include <fuzzy/operation.hpp>
 #include <fuzzy/relation.hpp>
 
 #include <iostream>
@@ -25,7 +27,7 @@ int main()
 
     for ( auto i{ 1 }; i <= 3; ++i )
     {
-        r2 = fuzzy::relation::composition( r2, r );
+        r2 = fuzzy::composition( r2, r );
 
         std::cout << "Broj odrađenih kompozicija: " << i << ". Relacija je:\n";
         std::cout << r2 << '\n';

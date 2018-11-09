@@ -2,7 +2,6 @@
 
 #include <fuzzy/domain.hpp>
 
-#include <set>
 #include <vector>
 
 namespace crisp

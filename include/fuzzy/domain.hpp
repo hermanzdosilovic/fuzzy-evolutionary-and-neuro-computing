@@ -77,7 +77,7 @@ public:
         {
             for ( auto const & b : other )
             {
-                element_type e;
+                element_type e; // NOTE: This is implemented in domain::join_elements.
                 e.reserve( std::size( a ) + std::size( b ) );
                 e.insert( std::end( e ), std::begin( a ), std::end( a ) );
                 e.insert( std::end( e ), std::begin( b ), std::end( b ) );

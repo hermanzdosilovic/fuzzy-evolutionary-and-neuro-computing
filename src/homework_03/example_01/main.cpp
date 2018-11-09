@@ -1,6 +1,7 @@
 #include <fuzzy/domain.hpp>
 #include <fuzzy/relation.hpp>
 #include <fuzzy/set.hpp>
+#include <fuzzy/operation.hpp>
 
 #include <iostream>
 
@@ -19,7 +20,7 @@ int main()
     fuzzy::Set x{ inputVoltage };
     x[ { 3 } ] = 1.0;
 
-    auto result{ fuzzy::relation::composition( x, voltageRelation ) };
+    auto result{ fuzzy::composition( x, voltageRelation ) };
     std::cout << result << '\n';
 
     return 0;
