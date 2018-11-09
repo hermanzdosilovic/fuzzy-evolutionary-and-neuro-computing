@@ -1,14 +1,14 @@
 #pragma once
 
-#include "domain.hpp"
+#include <fuzzy/element.hpp>
 
 namespace fuzzy
 {
 
-auto gamma( Domain::value_type const alpha, Domain::value_type const beta )
+auto gamma( Element::value_type const alpha, Element::value_type const beta )
 {
     return [ alpha, beta ]
-           ( Domain::element_type const & element ) -> double
+           ( Element const & element ) -> double
            {
                if ( std::size( element ) == 0 ) { return 0; }
 
@@ -21,10 +21,10 @@ auto gamma( Domain::value_type const alpha, Domain::value_type const beta )
            };
 }
 
-auto lambda( Domain::value_type const alpha, Domain::value_type const beta, Domain::value_type const gamma )
+auto lambda( Element::value_type const alpha, Element::value_type const beta, Element::value_type const gamma )
 {
     return [ alpha, beta, gamma ]
-           ( Domain::element_type const & element ) -> double
+           ( Element const & element ) -> double
            {
                if ( std::size( element ) == 0 ) { return 0; }
 
@@ -38,10 +38,10 @@ auto lambda( Domain::value_type const alpha, Domain::value_type const beta, Doma
            };
 }
 
-auto l( Domain::value_type const alpha, Domain::value_type const beta )
+auto l( Element::value_type const alpha, Element::value_type const beta )
 {
     return [ alpha, beta ]
-           ( Domain::element_type const & element ) -> double
+           ( Element const & element ) -> double
            {
                if ( std::size( element ) == 0 ) { return 0; }
 
@@ -54,10 +54,10 @@ auto l( Domain::value_type const alpha, Domain::value_type const beta )
            };
 }
 
-auto pi( Domain::value_type const alpha, Domain::value_type const beta, Domain::value_type const gamma, Domain::value_type const delta )
+auto pi( Element::value_type const alpha, Element::value_type const beta, Element::value_type const gamma, Element::value_type const delta )
 {
     return [ alpha, beta, gamma, delta ]
-           ( Domain::element_type const & element ) -> double
+           ( Element const & element ) -> double
            {
                if ( std::size( element ) == 0 ) { return 0; }
 

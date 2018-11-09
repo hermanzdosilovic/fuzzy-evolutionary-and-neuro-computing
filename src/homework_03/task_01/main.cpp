@@ -27,8 +27,7 @@ int main()
 
         std::istringstream stream{ line };
 
-        std::int16_t leftDistance, rightDistance, upperLeftDistance, upperRightDistance, speed;
-        std::int8_t direction;
+        std::int16_t leftDistance, rightDistance, upperLeftDistance, upperRightDistance, speed, direction;
 
         stream >> leftDistance >> rightDistance >> upperLeftDistance >> upperRightDistance >> speed >> direction;
 

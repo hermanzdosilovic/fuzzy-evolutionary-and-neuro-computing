@@ -1,13 +1,13 @@
 #pragma once
 
-#include <fuzzy/domain.hpp>
+#include <fuzzy/element.hpp>
 
 #include <vector>
 
 namespace crisp
 {
 
-using Set = std::vector< fuzzy::Domain::element_type >;
+using Set = std::vector< fuzzy::Element >;
 
 }
 

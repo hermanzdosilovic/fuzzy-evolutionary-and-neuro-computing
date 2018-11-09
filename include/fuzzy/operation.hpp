@@ -43,13 +43,13 @@ Relation composition( Relation const & r1, Relation const & r2, SNorm && s, TNor
             for ( auto const & b : Y )
             {
                 auto const & y{ b[ 0 ] };
-                result[ r1IsUnary ? Domain::element_type{ z } : Domain::element_type{ x, z } ] =
+                result[ r1IsUnary ? Element{ z } : Element{ x, z } ] =
                     s
                     (
-                        result[ r1IsUnary ? Domain::element_type{ z } : Domain::element_type{ x, z } ],
+                        result[ r1IsUnary ? Element{ z } : Element{ x, z } ],
                         t
                         (
-                            r1[ r1IsUnary ? Domain::element_type{ y } : Domain::element_type{ x, y } ],
+                            r1[ r1IsUnary ? Element{ y } : Element{ x, y } ],
                             r2[ { y, z } ]
                         )
                     );

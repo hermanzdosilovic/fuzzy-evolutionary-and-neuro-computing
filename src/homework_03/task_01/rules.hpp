@@ -9,8 +9,8 @@ fuzzy::Rules accelerationRules()
 {
     fuzzy::Rules rules;
 
-    fuzzy::Domain const u{ fuzzy::Domain::Range(     0, 1301 ) };
-    fuzzy::Domain const v{ fuzzy::Domain::Range( -1000, 1000 ) };
+    fuzzy::Domain const u{ fuzzy::Domain::Range(   0, 2 ) };
+    fuzzy::Domain const v{ fuzzy::Domain::Range( -10, 10 ) };
 
     fuzzy::Rule r1
     {

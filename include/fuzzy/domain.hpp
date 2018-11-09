@@ -1,5 +1,7 @@
 #pragma once
 
+#include <fuzzy/element.hpp>
+
 #include <algorithm>
 #include <cassert>
 #include <cstddef>
@@ -16,10 +18,6 @@ using Domains = std::vector< Domain >;
 class Domain
 {
 public:
-    using value_type   = std::int32_t;
-    using element_type = std::vector< value_type >;
-    using elements     = std::vector< element_type >;
-
     Domain() = default;
 
     Domain( Domain const & other ) : elements_{ other.elements_ }, components_{ other.components_ } {}
@@ -29,18 +27,18 @@ public:
         components_{ std::move( other.components_ ) }
     {}
 
-    Domain( element_type const & element )
+    Domain( Element const & element )
     {
         elements_.emplace_back( element );
     }
 
-    Domain( elements const & elements ) : elements_{ elements }
+    Domain( Elements const & elements ) : elements_{ elements }
     {
         std::sort( std::begin( elements_ ), std::end( elements_ ) );
         elements_.erase( std::unique( std::begin( elements_ ), std::end( elements_ ) ), std::end( elements_ ) );
     }
 
-    static Domain Range( value_type const lowerBound, value_type const upperBound )
+    static Domain Range( Element::value_type const lowerBound, Element::value_type const upperBound )
     {
         assert( lowerBound <= upperBound );
 
@@ -61,13 +59,13 @@ public:
         return empty;
     }
 
-    element_type const & operator[]( std::size_t const index ) const
+    Element const & operator[]( std::size_t const index ) const
     {
         assert( index < size() );
         return elements_[ index ];
     }
 
-    std::size_t index( element_type const & element ) const
+    std::size_t index( Element const & element ) const
     {
         return std::distance
         (
@@ -78,18 +76,21 @@ public:
 
     Domain operator*( Domain const & other ) const
     {
+        if ( other.size() == 0 )
+        {
+            return *this;
+        }
+
+        Domain const & tmp{ other };
+
         Domain result;
-        result.elements_.reserve( size() * other.size() );
+        result.elements_.reserve( size() * tmp.size() );
 
         for ( auto const & a : *this )
         {
-            for ( auto const & b : other )
+            for ( auto const & b : tmp )
             {
-                element_type e; // NOTE: This is implemented in domain::join_elements.
-                e.reserve( std::size( a ) + std::size( b ) );
-                e.insert( std::end( e ), std::begin( a ), std::end( a ) );
-                e.insert( std::end( e ), std::begin( b ), std::end( b ) );
-                result.elements_.emplace_back( e );
+                result.elements_.emplace_back( element::join( a, b ) );
             }
         }
 
@@ -134,36 +135,22 @@ public:
 
     Domain operator+( Domain const & other ) const
     {
-        elements e{ std::begin( other ), std::end( other ) };
+        Elements e{ std::begin( other ), std::end( other ) };
         e.insert( std::end( e ), begin(), end() );
         return e;
     }
 
     std::size_t size() const { return std::size( elements_ ); }
 
-    elements::const_iterator begin() const { return std::begin( elements_ ); }
-    elements::const_iterator end()   const { return std::end  ( elements_ ); }
+    Elements::const_iterator begin() const { return std::begin( elements_ ); }
+    Elements::const_iterator end()   const { return std::end  ( elements_ ); }
 
     auto const & components() const { return components_; }
 
 private:
-    elements elements_;
+    Elements elements_;
     Domains  components_;
 };
-
-namespace domain
-{
-
-Domain::element_type join_elements( Domain::element_type const & a, Domain::element_type const & b )
-{
-    Domain::element_type e;
-    e.reserve( std::size( a ) + std::size( b ) );
-    e.insert( std::end( e ), std::begin( a ), std::end( a ) );
-    e.insert( std::end( e ), std::begin( b ), std::end( b ) );
-    return e;
-}
-
-}
 
 }
 

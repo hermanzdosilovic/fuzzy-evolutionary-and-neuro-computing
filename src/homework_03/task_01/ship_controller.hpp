@@ -4,12 +4,14 @@
 #include <fuzzy/inference/rule.hpp>
 #include <fuzzy/relation.hpp>
 #include <fuzzy/operation.hpp>
+#include <fuzzy/domain.hpp>
 
 #include <cstdint>
 #include <iterator>
 #include <numeric>
 #include <utility>
 #include <vector>
+#include <iostream>
 
 class ShipController
 {
@@ -56,28 +58,21 @@ public:
         std::int16_t upperLeftDistance,
         std::int16_t upperRightDistance,
         std::int16_t speed,
-        std::int8_t  direction
+        std::int16_t  direction
     )
     {
-        fuzzy::Sets const inputs
-        {
-            fuzzy::Set::Singleton( { rightDistance      } ),
-            fuzzy::Set::Singleton( { upperLeftDistance  } ),
-            fuzzy::Set::Singleton( { upperRightDistance } ),
-            fuzzy::Set::Singleton( { speed              } ),
-            fuzzy::Set::Singleton( { direction          } )
-        };
+        fuzzy::Element input;
+        input = fuzzy::element::join( input, { leftDistance       } );
+        input = fuzzy::element::join( input, { rightDistance      } );
+        input = fuzzy::element::join( input, { upperLeftDistance  } );
+        input = fuzzy::element::join( input, { upperRightDistance } );
+        input = fuzzy::element::join( input, { speed              } );
+        input = fuzzy::element::join( input, { direction          } );
 
-        fuzzy::Relation accelerationInput{ fuzzy::Set::Singleton( { leftDistance } ) };
-        fuzzy::Relation rudderInput{ accelerationInput };
-        for ( auto const & i : inputs )
-        {
-            accelerationInput = cross( accelerationInput, i, accelerationEngine_.tNormType() );
-            rudderInput       = cross( rudderInput      , i, rudderEngine_      .tNormType() );
-        }
+        std::cerr << input << std::endl;
 
-        auto const accelerationOutput{ accelerationEngine_.predict( accelerationInput, accelerationRelations_ ) };
-        auto const rudderOutput      { rudderEngine_      .predict( rudderInput      , rudderRelations_       ) };
+        auto const accelerationOutput{ accelerationEngine_.predict( input, accelerationRelations_ ) };
+        auto const rudderOutput      { rudderEngine_      .predict( input, rudderRelations_       ) };
 
         double accelerationCenterOfArea
         {
@@ -86,7 +81,7 @@ public:
                 std::begin( accelerationOutput ),
                 std::end  ( accelerationOutput ),
                 0.0,
-                [ & accelerationOutput ]( double const & current, fuzzy::Domain::element_type const & element )
+                [ & accelerationOutput ]( double const & current, fuzzy::Element const & element )
                 {
                     assert( std::size( element ) == 1 );
                     return current + element[ 0 ] * accelerationOutput[ element ];
@@ -97,7 +92,7 @@ public:
                 std::begin( accelerationOutput ),
                 std::end  ( accelerationOutput ),
                 0.0,
-                [ & accelerationOutput ]( double const & current, fuzzy::Domain::element_type const & element )
+                [ & accelerationOutput ]( double const & current, fuzzy::Element const & element )
                 {
                     return current + accelerationOutput[ element ];
                 }
@@ -111,7 +106,7 @@ public:
                 std::begin( rudderOutput ),
                 std::end  ( rudderOutput ),
                 0.0,
-                [ & rudderOutput ]( double const & current, fuzzy::Domain::element_type const & element )
+                [ & rudderOutput ]( double const & current, fuzzy::Element const & element )
                 {
                     assert( std::size( element ) == 1 );
                     return current + element[ 0 ] * rudderOutput[ element ];
@@ -122,13 +117,14 @@ public:
                 std::begin( rudderOutput ),
                 std::end  ( rudderOutput ),
                 0.0,
-                [ & rudderOutput ]( double const & current, fuzzy::Domain::element_type const & element )
+                [ & rudderOutput ]( double const & current, fuzzy::Element const & element )
                 {
                     return current + rudderOutput[ element ];
                 }
             )
         };
 
+        std::cerr << accelerationCenterOfArea << " " << rudderCenterOfArea << std::endl;
         return { std::floor( accelerationCenterOfArea ), std::floor( rudderCenterOfArea ) };
     }
 

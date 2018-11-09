@@ -20,6 +20,7 @@ target_link_libraries( hw01t02 PRIVATE fenc )
 add_executable( hw01t03 ${CMAKE_CURRENT_LIST_DIR}/src/homework_01/task_03/main.cpp )
 target_link_libraries( hw01t03 PRIVATE fenc )
 
+
 add_executable( hw02t01 ${CMAKE_CURRENT_LIST_DIR}/src/homework_02/task_01/main.cpp )
 target_link_libraries( hw02t01 PRIVATE fenc )
 
@@ -29,6 +30,7 @@ target_link_libraries( hw02t02 PRIVATE fenc )
 add_executable( hw02t03 ${CMAKE_CURRENT_LIST_DIR}/src/homework_02/task_03/main.cpp )
 target_link_libraries( hw02t03 PRIVATE fenc )
 
+
 add_executable( hw03e01 ${CMAKE_CURRENT_LIST_DIR}/src/homework_03/example_01/main.cpp )
 target_link_libraries( hw03e01 PRIVATE fenc )
 
@@ -37,3 +39,6 @@ target_link_libraries( hw03e02 PRIVATE fenc )
 
 add_executable( hw03t01 ${CMAKE_CURRENT_LIST_DIR}/src/homework_03/task_01/main.cpp )
 target_link_libraries( hw03t01 PRIVATE fenc )
+
+add_executable( hw03t03 ${CMAKE_CURRENT_LIST_DIR}/src/homework_03/task_03/main.cpp )
+target_link_libraries( hw03t03 PRIVATE fenc )

@@ -51,21 +51,21 @@ public:
         return empty;
     }
 
-    static Set Singleton( Domain::element_type const & element )
+    static Set Singleton( Element const & element )
     {
         Set s{ element };
         s[ element ] = 1.0;
         return s;
     }
 
-    double & operator[]( Domain::element_type const & element )
+    double & operator[]( Element const & element )
     {
         auto index{ domain_.index( element ) };
         assert( index < std::size( membership_ ) );
         return membership_[ index ];
     }
 
-    double operator[]( Domain::element_type const & element ) const
+    double operator[]( Element const & element ) const
     {
         auto index{ domain_.index( element ) };
         if ( index >= std::size( membership_ ) ) { return isUniversal_; }
@@ -134,7 +134,7 @@ public:
         return *this;
     }
 
-    Set & operator*=( Set const & other ) // NOTE: This is the same as fuzzy::implication< fuzzy::ImplicationType::ZADEH >.
+    Set & operator*=( Set const & other )
     {
         auto const & self{ *this };
 
@@ -143,7 +143,7 @@ public:
         {
             for ( auto const & y : other.domain_ )
             {
-                result[ domain::join_elements( x, y ) ] = std::min( self[ x ], other[ y ] );
+                result[ element::join( x, y ) ] = std::min( self[ x ], other[ y ] );
             }
         }
 
@@ -213,7 +213,7 @@ public:
 
     static Set product( double const alpha, crisp::Set set )
     {
-        return { set, [ alpha ]( Domain::element_type const & ) { return alpha; } };
+        return { set, [ alpha ]( Element const & ) { return alpha; } };
     }
 
     double height() const { return size() == 0 ? 0 : *std::max_element( std::begin( membership_ ), std::end( membership_ ) ); }
@@ -226,8 +226,8 @@ public:
 
     auto const & domain() const { return domain_; }
 
-    Domain::elements::const_iterator begin() const { return std::begin( domain_ ); }
-    Domain::elements::const_iterator end()   const { return std::end  ( domain_ ); }
+    Elements::const_iterator begin() const { return std::begin( domain_ ); }
+    Elements::const_iterator end()   const { return std::end  ( domain_ ); }
 
 private:
     Set() = default;
