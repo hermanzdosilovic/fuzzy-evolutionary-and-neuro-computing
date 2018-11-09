@@ -1,6 +1,5 @@
 #pragma once
 
-#include <fuzzy/inference/inference.hpp>
 #include <fuzzy/implication.hpp>
 #include <fuzzy/snorm.hpp>
 #include <fuzzy/tnorm.hpp>
@@ -13,12 +12,10 @@ class Engine
 public:
     constexpr Engine
     (
-        InferenceType   const inferenceType,
         ImplicationType const implicationType,
         SNormType       const sNormType,
         TNormType       const tNormType
     ) :
-        inferenceType_{ inferenceType },
         implicationType_{ implicationType },
         sNormType_{ sNormType },
         tNormType_{ tNormType }
@@ -28,7 +25,6 @@ public:
     {
         static Engine minimumInferenceEngine
         {
-            InferenceType::INDIVIDUAL_RULE,
             ImplicationType::MAMDANI_MIN,
             SNormType::ZADEH_MAX,
             TNormType::ZADEH_MIN
@@ -40,7 +36,6 @@ public:
     {
         static Engine productInferenceEngine
         {
-            InferenceType::INDIVIDUAL_RULE,
             ImplicationType::MAMDANI_PRODUCT,
             SNormType::ZADEH_MAX,
             TNormType::ALGEBRAIC_PRODUCT
@@ -48,13 +43,16 @@ public:
         return productInferenceEngine;
     }
 
+    auto implicationType() { return implicationType_; }
+    auto sNormType()       { return sNormType_; }
+    auto tNormType()       { return tNormType_; }
+
     Relation predict( Relation const & input ) const
     {
         return input;
     }
 
 private:
-    InferenceType   inferenceType_;
     ImplicationType implicationType_;
     SNormType       sNormType_;
     TNormType       tNormType_;

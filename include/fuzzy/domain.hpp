@@ -10,6 +10,9 @@
 namespace fuzzy
 {
 
+class Domain;
+using Domains = std::vector< Domain >;
+
 class Domain
 {
 public:
@@ -140,7 +143,7 @@ public:
 
 private:
     elements elements_;
-    std::vector< Domain > components_;
+    Domains  components_;
 };
 
 namespace domain

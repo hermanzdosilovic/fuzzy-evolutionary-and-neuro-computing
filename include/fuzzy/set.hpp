@@ -230,6 +230,8 @@ private:
     bool isUniversal_{ false };
 };
 
+using Sets = std::vector< Set >;
+
 }
 
 std::ostream & operator<<( std::ostream & ostream, fuzzy::Set const & set )

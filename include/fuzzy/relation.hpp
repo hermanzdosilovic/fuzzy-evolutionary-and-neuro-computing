@@ -5,11 +5,13 @@
 #include <algorithm>
 #include <cassert>
 #include <iterator>
+#include <vector>
 
 namespace fuzzy
 {
 
-using Relation = Set;
+using Relation  = Set;
+using Relations = std::vector< Relation >;
 
 namespace relation
 {
