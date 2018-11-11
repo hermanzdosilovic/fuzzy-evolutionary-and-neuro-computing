@@ -42,6 +42,7 @@ int main()
         );
 
         std::cout << acceleration << " " << angle << std::endl;
+        std::cerr << acceleration << " " << angle << std::endl;
     }
 
     return 0;

@@ -8,7 +8,6 @@
 #include <fuzzy/relation.hpp>
 
 #include <cstdint>
-#include <iostream>
 #include <iterator>
 #include <utility>
 #include <vector>
@@ -68,17 +67,11 @@ public:
         //input += { speed              };
         //input += { direction          };
 
-        std::cerr << input << std::endl;
-
-        std::cerr << "Predicting" << std::endl;
         auto const accelerationOutput{ accelerationEngine_.predict( input, accelerationRelations_, accelerationResultDomain_ ) };
         auto const rudderOutput      { rudderEngine_      .predict( input, rudderRelations_      , rudderResultDomain_       ) };
-        std::cerr << "Done" << std::endl;
 
         double accelerationCenterOfArea{ fuzzy::centerOfArea( accelerationOutput ) };
         double rudderCenterOfArea      { fuzzy::centerOfArea( rudderOutput       ) };
-
-        std::cerr << accelerationCenterOfArea << " " << rudderCenterOfArea << std::endl;
 
         return { std::floor( accelerationCenterOfArea ), std::floor( rudderCenterOfArea ) };
     }
