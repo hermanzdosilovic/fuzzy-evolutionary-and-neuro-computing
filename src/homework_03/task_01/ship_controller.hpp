@@ -26,7 +26,6 @@ public:
         accelerationEngine_{ accelerationEngine },
         rudderEngine_{ rudderEngine }
     {
-        std::cerr << "For acc." << std::endl;
         accelerationRelations_ = std::move
         (
             fuzzy::rule::relations
@@ -36,10 +35,7 @@ public:
                 accelerationEngine_.implicationType()
             )
         );
-        std::cerr << "Done." << std::endl;
 
-
-        std::cerr << "For rudder." << std::endl;
         rudderRelations_ = std::move
         (
             fuzzy::rule::relations
@@ -49,7 +45,9 @@ public:
                 rudderEngine_.implicationType()
             )
         );
-        std::cerr << "Done." << std::endl;
+
+        accelerationResultDomain_ = accelerationRules[ 0 ].consequent().domain();
+        rudderResultDomain_       = rudderRules      [ 0 ].consequent().domain();
     }
 
     std::pair< std::int16_t, std::int16_t > maneuver
@@ -72,8 +70,10 @@ public:
 
         std::cerr << input << std::endl;
 
-        auto const accelerationOutput{ accelerationEngine_.predict( input, accelerationRelations_ ) };
-        auto const rudderOutput      { rudderEngine_      .predict( input, rudderRelations_       ) };
+        std::cerr << "Predicting" << std::endl;
+        auto const accelerationOutput{ accelerationEngine_.predict( input, accelerationRelations_, accelerationResultDomain_ ) };
+        auto const rudderOutput      { rudderEngine_      .predict( input, rudderRelations_      , rudderResultDomain_       ) };
+        std::cerr << "Done" << std::endl;
 
         double accelerationCenterOfArea{ fuzzy::centerOfArea( accelerationOutput ) };
         double rudderCenterOfArea      { fuzzy::centerOfArea( rudderOutput       ) };
@@ -88,4 +88,6 @@ private:
     fuzzy::Engine    rudderEngine_;
     fuzzy::Relations accelerationRelations_;
     fuzzy::Relations rudderRelations_;
+    fuzzy::Domain    accelerationResultDomain_;
+    fuzzy::Domain    rudderResultDomain_;
 };

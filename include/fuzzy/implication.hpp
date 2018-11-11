@@ -6,7 +6,6 @@
 #include <cstdint>
 #include <cmath>
 #include <stdexcept>
-#include <iostream>
 
 namespace fuzzy
 {
@@ -27,21 +26,14 @@ namespace detail
 template< typename Function >
 Relation implication( Relation const & r1, Relation const & r2, Function && f )
 {
-    std::cerr << "implication start." << std::endl;
     Relation result;
-    std::cerr << "cross end." << std::endl;
-
-    std::cerr << std::size( r1.domain() ) << std::endl;
-    std::cerr << std::size( r2.domain() ) << std::endl;
-    for ( auto const & x : r1.domain() )
+    for ( auto const & [ x, vx ] : r1 )
     {
-        for ( auto const & y : r2.domain() )
+        for ( auto const & [ y, vy ] : r2 )
         {
-            result[ x + y ] = f( r1[ x ], r2[ y ] );
+            result[ x + y ] = f( vx, vy );
         }
     }
-    std::cerr << "implication end." << std::endl;
-
     return result;
 }
 

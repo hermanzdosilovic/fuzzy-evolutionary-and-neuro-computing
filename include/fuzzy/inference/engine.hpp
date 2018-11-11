@@ -51,26 +51,20 @@ public:
     auto sNormType()       { return sNormType_;       }
     auto tNormType()       { return tNormType_;       }
 
-    Relation predict( Element const & input, [[ maybe_unused ]] Relations const & relations ) const
+    Relation predict( Element const & input, Relations const & relations, Domain const & domain ) const
     {
         Relations results;
         for ( auto const & relation : relations )
         {
-            Relation result{ relation.domain().components().back() };
-            for ( auto const & e : result.domain() )
+            Relation result;
+            for ( auto const & e : domain )
             {
                 result[ e ] = relation[ input + e ];
             }
             results.emplace_back( result );
         }
 
-        Relation output{ results[ 0 ] };
-        for ( std::size_t i{ 1 }; i < std::size( results ); ++i )
-        {
-            output = disjunction( output, results[ i ], sNormType_ );
-        }
-
-        return output;
+        return disjunction( results, sNormType_ );
     }
 
 private:
