@@ -28,7 +28,7 @@ template< typename Function >
 Relation implication( Relation const & r1, Relation const & r2, Function && f )
 {
     std::cerr << "implication start." << std::endl;
-    Relation result{ r1.domain() * r2.domain() };
+    Relation result;
     std::cerr << "cross end." << std::endl;
 
     std::cerr << std::size( r1.domain() ) << std::endl;

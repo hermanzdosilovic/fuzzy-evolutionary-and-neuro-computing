@@ -17,6 +17,8 @@ namespace fuzzy
 class Set
 {
 public:
+    Set() = default;
+
     Set( Domain const & domain ) : domain_{ domain } {}
 
     template< typename MembershipFunction >
@@ -241,8 +243,6 @@ public:
     auto end()   const { return std::end  ( membership_ ); }
 
 private:
-    Set() = default;
-
     Domain domain_;
     std::map< Element, double > membership_;
     bool isUniversal_{ false };
