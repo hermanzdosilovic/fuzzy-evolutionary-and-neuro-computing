@@ -1,14 +1,14 @@
 #pragma once
 
+#include <fuzzy/defuzzyfication.hpp>
+#include <fuzzy/domain.hpp>
 #include <fuzzy/inference/engine.hpp>
 #include <fuzzy/inference/rule.hpp>
-#include <fuzzy/relation.hpp>
 #include <fuzzy/operation.hpp>
-#include <fuzzy/domain.hpp>
+#include <fuzzy/relation.hpp>
 
 #include <cstdint>
 #include <iterator>
-#include <numeric>
 #include <utility>
 #include <vector>
 #include <iostream>
@@ -74,55 +74,8 @@ public:
         auto const accelerationOutput{ accelerationEngine_.predict( input, accelerationRelations_ ) };
         auto const rudderOutput      { rudderEngine_      .predict( input, rudderRelations_       ) };
 
-        double accelerationCenterOfArea
-        {
-            std::accumulate
-            (
-                std::begin( accelerationOutput ),
-                std::end  ( accelerationOutput ),
-                0.0,
-                [ & accelerationOutput ]( double const & current, fuzzy::Element const & element )
-                {
-                    assert( std::size( element ) == 1 );
-                    return current + element[ 0 ] * accelerationOutput[ element ];
-                }
-            ) /
-            std::accumulate
-            (
-                std::begin( accelerationOutput ),
-                std::end  ( accelerationOutput ),
-                0.0,
-                [ & accelerationOutput ]( double const & current, fuzzy::Element const & element )
-                {
-                    return current + accelerationOutput[ element ];
-                }
-            )
-        };
-
-        double rudderCenterOfArea
-        {
-            std::accumulate
-            (
-                std::begin( rudderOutput ),
-                std::end  ( rudderOutput ),
-                0.0,
-                [ & rudderOutput ]( double const & current, fuzzy::Element const & element )
-                {
-                    assert( std::size( element ) == 1 );
-                    return current + element[ 0 ] * rudderOutput[ element ];
-                }
-            ) /
-            std::accumulate
-            (
-                std::begin( rudderOutput ),
-                std::end  ( rudderOutput ),
-                0.0,
-                [ & rudderOutput ]( double const & current, fuzzy::Element const & element )
-                {
-                    return current + rudderOutput[ element ];
-                }
-            )
-        };
+        double accelerationCenterOfArea{ fuzzy::centerOfArea( accelerationOutput ) };
+        double rudderCenterOfArea{ fuzzy::centerOfArea( rudderOutput ) };
 
         std::cerr << accelerationCenterOfArea << " " << rudderCenterOfArea << std::endl;
         return { std::floor( accelerationCenterOfArea ), std::floor( rudderCenterOfArea ) };

@@ -48,8 +48,8 @@ public:
     }
 
     auto implicationType() { return implicationType_; }
-    auto sNormType()       { return sNormType_; }
-    auto tNormType()       { return tNormType_; }
+    auto sNormType()       { return sNormType_;       }
+    auto tNormType()       { return tNormType_;       }
 
     Relation predict( Element const & input, [[ maybe_unused ]] Relations const & relations ) const
     {
