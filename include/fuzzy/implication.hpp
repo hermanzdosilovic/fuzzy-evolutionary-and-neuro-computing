@@ -32,7 +32,7 @@ Relation implication( Relation const & r1, Relation const & r2, Function && f )
     {
         for ( auto const & y : r2.domain() )
         {
-            result[ element::join( x, y ) ] = f( r1[ x ], r2[ y ] );
+            result[ x + y ] = f( r1[ x ], r2[ y ] );
         }
     }
 

@@ -58,16 +58,16 @@ public:
         std::int16_t upperLeftDistance,
         std::int16_t upperRightDistance,
         std::int16_t speed,
-        std::int16_t  direction
+        std::int16_t direction
     )
     {
         fuzzy::Element input;
-        input = fuzzy::element::join( input, { leftDistance       } );
-        input = fuzzy::element::join( input, { rightDistance      } );
-        input = fuzzy::element::join( input, { upperLeftDistance  } );
-        input = fuzzy::element::join( input, { upperRightDistance } );
-        input = fuzzy::element::join( input, { speed              } );
-        input = fuzzy::element::join( input, { direction          } );
+        input += { leftDistance       };
+        input += { rightDistance      };
+        input += { upperLeftDistance  };
+        input += { upperRightDistance };
+        input += { speed              };
+        input += { direction          };
 
         std::cerr << input << std::endl;
 
@@ -75,9 +75,10 @@ public:
         auto const rudderOutput      { rudderEngine_      .predict( input, rudderRelations_       ) };
 
         double accelerationCenterOfArea{ fuzzy::centerOfArea( accelerationOutput ) };
-        double rudderCenterOfArea{ fuzzy::centerOfArea( rudderOutput ) };
+        double rudderCenterOfArea      { fuzzy::centerOfArea( rudderOutput       ) };
 
         std::cerr << accelerationCenterOfArea << " " << rudderCenterOfArea << std::endl;
+
         return { std::floor( accelerationCenterOfArea ), std::floor( rudderCenterOfArea ) };
     }
 

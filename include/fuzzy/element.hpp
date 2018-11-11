@@ -24,3 +24,14 @@ Element join( Element const & a, Element const & b )
 }
 
 }
+
+fuzzy::Element operator+( fuzzy::Element const & a, fuzzy::Element const & b )
+{
+    return fuzzy::element::join( a, b );
+}
+
+fuzzy::Element & operator+=( fuzzy::Element & a, fuzzy::Element const & b )
+{
+    a = std::move( a + b );
+    return a;
+}

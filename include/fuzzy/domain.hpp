@@ -90,7 +90,7 @@ public:
         {
             for ( auto const & b : tmp )
             {
-                result.elements_.emplace_back( element::join( a, b ) );
+                result.elements_.emplace_back( a + b );
             }
         }
 

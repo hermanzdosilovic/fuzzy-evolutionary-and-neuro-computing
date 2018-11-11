@@ -143,7 +143,7 @@ public:
         {
             for ( auto const & y : other.domain_ )
             {
-                result[ element::join( x, y ) ] = std::min( self[ x ], other[ y ] );
+                result[ x + y ] = std::min( self[ x ], other[ y ] );
             }
         }
 

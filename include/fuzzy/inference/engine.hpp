@@ -59,7 +59,7 @@ public:
             Relation result{ relation.domain().components().back() };
             for ( auto const & e : result.domain() )
             {
-                result[ e ] = relation[ element::join( input, e ) ];
+                result[ e ] = relation[ input + e ];
             }
             results.emplace_back( result );
         }
