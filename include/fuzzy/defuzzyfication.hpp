@@ -16,10 +16,10 @@ double centerOfArea( Set const & s )
         std::begin( s ),
         std::end  ( s ),
         0.0,
-        [ & s ]( double const & current, Element const & e )
+        []( double const & current, auto const & e )
         {
-            assert( std::size( e ) == 1 );
-            return current + e[ 0 ] * s[ e ];
+            assert( std::size( e.first ) == 1 );
+            return current + e.first[ 0 ] * e.second;
         }
     ) /
     std::accumulate
@@ -27,9 +27,9 @@ double centerOfArea( Set const & s )
         std::begin( s ),
         std::end  ( s ),
         0.0,
-        [ & s ]( double const & current, Element const & e )
+        []( double const & current, auto const & e )
         {
-            return current + s[ e ];
+            return current + e.second;
         }
     );
 }

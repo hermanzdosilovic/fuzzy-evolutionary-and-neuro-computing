@@ -76,11 +76,6 @@ public:
 
     Domain operator*( Domain const & other ) const
     {
-        if ( other.size() == 0 )
-        {
-            return *this;
-        }
-
         Domain const & tmp{ other };
 
         Domain result;

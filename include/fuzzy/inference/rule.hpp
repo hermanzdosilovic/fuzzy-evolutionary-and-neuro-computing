@@ -7,6 +7,7 @@
 
 #include <iterator>
 #include <vector>
+#include <iostream>
 
 namespace fuzzy
 {
@@ -40,7 +41,9 @@ Relations relations( Rules const & rules, TNormType const tNormType, Implication
     results.reserve( std::size( rules ) );
     for ( auto const & rule : rules )
     {
+        std::cerr << "Calculating relation for rule." << std::endl;
         results.emplace_back( rule.relation( tNormType, implicationType ) );
+        std::cerr << "Done." << std::endl;
     }
     return results;
 }

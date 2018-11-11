@@ -26,6 +26,7 @@ public:
         accelerationEngine_{ accelerationEngine },
         rudderEngine_{ rudderEngine }
     {
+        std::cerr << "For acc." << std::endl;
         accelerationRelations_ = std::move
         (
             fuzzy::rule::relations
@@ -35,7 +36,10 @@ public:
                 accelerationEngine_.implicationType()
             )
         );
+        std::cerr << "Done." << std::endl;
 
+
+        std::cerr << "For rudder." << std::endl;
         rudderRelations_ = std::move
         (
             fuzzy::rule::relations
@@ -45,25 +49,26 @@ public:
                 rudderEngine_.implicationType()
             )
         );
+        std::cerr << "Done." << std::endl;
     }
 
     std::pair< std::int16_t, std::int16_t > maneuver
     (
-        std::int16_t leftDistance,
-        std::int16_t rightDistance,
-        std::int16_t upperLeftDistance,
-        std::int16_t upperRightDistance,
-        std::int16_t speed,
-        std::int16_t direction
+        [[ maybe_unused ]] std::int16_t leftDistance,
+        [[ maybe_unused ]] std::int16_t rightDistance,
+        [[ maybe_unused ]] std::int16_t upperLeftDistance,
+        [[ maybe_unused ]] std::int16_t upperRightDistance,
+        [[ maybe_unused ]] std::int16_t speed,
+        [[ maybe_unused ]] std::int16_t direction
     )
     {
         fuzzy::Element input;
         input += { leftDistance       };
-        input += { rightDistance      };
-        input += { upperLeftDistance  };
-        input += { upperRightDistance };
-        input += { speed              };
-        input += { direction          };
+        //input += { rightDistance      };
+        //input += { upperLeftDistance  };
+        //input += { upperRightDistance };
+        //input += { speed              };
+        //input += { direction          };
 
         std::cerr << input << std::endl;
 

@@ -92,9 +92,9 @@ template< typename Function >
 Set transform( Set const & s, Function && f )
 {
     Set result{ s };
-    for ( auto & e : result )
+    for ( auto & [ k, v ] : result )
     {
-        result[ e ] = f( result[ e ] );
+        result[ k ] = f( v );
     }
     return result;
 }

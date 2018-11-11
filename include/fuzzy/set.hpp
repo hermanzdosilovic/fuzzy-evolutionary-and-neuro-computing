@@ -8,6 +8,8 @@
 #include <numeric>
 #include <ostream>
 #include <vector>
+#include <map>
+#include <tuple>
 
 namespace fuzzy
 {
@@ -15,14 +17,14 @@ namespace fuzzy
 class Set
 {
 public:
-    Set( Domain const & domain ) : domain_{ domain }, membership_( std::size( domain ) ) {}
+    Set( Domain const & domain ) : domain_{ domain } {}
 
     template< typename MembershipFunction >
     Set( Domain const & domain, MembershipFunction && f ) : Set( domain )
     {
-        for ( std::size_t i{ 0 }; i < std::size( domain ); ++i )
+        for ( auto const & e : domain )
         {
-            membership_[ i ] = f( domain[ i ] );
+            membership_[ e ] = f( e );
         }
     }
 
@@ -60,33 +62,33 @@ public:
 
     double & operator[]( Element const & element )
     {
-        auto index{ domain_.index( element ) };
-        assert( index < std::size( membership_ ) );
-        return membership_[ index ];
+        return membership_[ element ];
     }
 
     double operator[]( Element const & element ) const
     {
-        auto index{ domain_.index( element ) };
-        if ( index >= std::size( membership_ ) ) { return isUniversal_; }
-        return membership_[ index ];
+        if ( membership_.find( element ) == std::end( membership_ ) )
+        {
+            return isUniversal_ ? 1 : 0;
+        }
+        return membership_.at( element );
     }
 
     bool operator==( Set const & other ) const
     {
         auto const & self{ *this };
 
-        for ( auto const & e : self )
+        for ( auto const & [ k, v ] : membership_ )
         {
-            if ( other[ e ] != self[ e ] )
+            if ( other[ k ] != v )
             {
                 return false;
             }
         }
 
-        for ( auto const & e : other )
+        for ( auto const & [ k, v ] : other.membership_ )
         {
-            if ( other[ e ] != self[ e ] )
+            if ( v != self[ k ] )
             {
                 return false;
             }
@@ -101,17 +103,17 @@ public:
     {
         auto const & self{ *this };
 
-        for ( auto const & e : self )
+        for ( auto const & [ k, v ] : membership_ )
         {
-            if ( other[ e ] < self[ e ] )
+            if ( other[ k ] < v )
             {
                 return false;
             }
         }
 
-        for ( auto const & e : other )
+        for ( auto const & [ k, v ] : other.membership_ )
         {
-            if ( other[ e ] < self[ e ] )
+            if ( v < self[ k ] )
             {
                 return false;
             }
@@ -165,14 +167,12 @@ public:
 
     crisp::Set core() const
     {
-        auto const & self{ *this };
-
         crisp::Set core;
-        for ( auto const & e : self )
+        for ( auto const & [ k, v ] : membership_ )
         {
-            if ( self[ e ] == 1.0 )
+            if ( v == 1.0 )
             {
-                core << e;
+                core << k;
             }
         }
 
@@ -181,14 +181,12 @@ public:
 
     crisp::Set support() const
     {
-        auto const & self{ *this };
-
         crisp::Set support;
-        for ( auto const & e : self )
+        for ( auto const & [ k, v ] : membership_ )
         {
-            if ( self[ e ] > 0 )
+            if ( v > 0 )
             {
-                support << e;
+                support << k;
             }
         }
 
@@ -197,14 +195,12 @@ public:
 
     crisp::Set alphaCut( double const alpha )
     {
-        auto const & self{ *this };
-
         crisp::Set cut;
-        for ( auto const & e : self )
+        for ( auto const & [ k, v ] : membership_ )
         {
-            if ( self[ e ] >= alpha )
+            if ( v >= alpha )
             {
-                cut << e;
+                cut << k;
             }
         }
 
@@ -216,24 +212,39 @@ public:
         return { set, [ alpha ]( Element const & ) { return alpha; } };
     }
 
-    double height() const { return size() == 0 ? 0 : *std::max_element( std::begin( membership_ ), std::end( membership_ ) ); }
+    double height() const
+    {
+        if ( size() == 0 )
+        {
+            return 0;
+        }
+
+        return std::max_element
+        (
+            std::begin( membership_ ),
+            std::end  ( membership_ ),
+            []( auto const & a, auto const & b ){ return a.second < b.second; }
+        )->second;
+    }
 
     double is_normal() const { return height() == 1.0; }
 
-    std::size_t size() const { return std::size( domain_ ); }
+    std::size_t size() const { return std::size( membership_ ); }
 
-    double cardinality() const { return std::accumulate( std::begin( membership_ ), std::end( membership_ ), 0 ); }
+    double cardinality() const {
+        return std::accumulate( std::begin( membership_ ), std::end( membership_ ), 0, []( double const & c, auto const & e ){ return c + e.second; } );
+    }
 
     auto const & domain() const { return domain_; }
 
-    Elements::const_iterator begin() const { return std::begin( domain_ ); }
-    Elements::const_iterator end()   const { return std::end  ( domain_ ); }
+    auto begin() const { return std::begin( membership_ ); }
+    auto end()   const { return std::end  ( membership_ ); }
 
 private:
     Set() = default;
 
     Domain domain_;
-    std::vector< double > membership_;
+    std::map< Element, double > membership_;
     bool isUniversal_{ false };
 };
 
@@ -245,9 +256,9 @@ std::ostream & operator<<( std::ostream & ostream, fuzzy::Set const & set )
 {
     std::size_t i{ 0 };
     ostream << "{\n";
-    for ( auto const & e : set )
+    for ( auto const & [ k, v ] : set )
     {
-        ostream << "  " << e << " -> " << set[ e ];
+        ostream << "  " << k << " -> " << v;
         if ( ++i < std::size( set ) )
         {
             ostream << ",\n";

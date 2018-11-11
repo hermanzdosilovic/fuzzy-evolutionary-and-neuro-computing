@@ -11,9 +11,9 @@ Set disjunction( Set const & s1, Set const & s2, SNorm && s )
 {
     Set result{ s1.domain() + s2.domain() };
 
-    for ( auto const & e : result )
+    for ( auto const & [ k, v ] : result )
     {
-        result[ e ] = s( s1[ e ], s2[ e ] );
+        result[ k ] = s( s1[ k ], s2[ k ] );
     }
 
     return result;
