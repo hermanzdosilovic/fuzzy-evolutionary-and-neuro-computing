@@ -13,7 +13,7 @@ Set tNorm( Set const & first, Set const & second, double const nu )
         auto const & a{ first[ e ] };
         auto const & b{ second[ e ] };
 
-        set[ e ] = ( a * b ) / static_cast< double >( nu + ( 1 - nu ) * ( a + b - a * b ) );
+        set[ e ] = ( a * b ) / ( nu + ( 1 - nu ) * ( a + b - a * b ) );
     }
     return set;
 }
@@ -26,7 +26,7 @@ Set sNorm( Set const & first, Set const & second, double const nu )
         auto const & a{ first[ e ] };
         auto const & b{ second[ e ] };
 
-        set[ e ] = ( a + b - ( 2 - nu ) * a * b ) / static_cast< double >( 1 - ( 1 - nu ) * a * b );
+        set[ e ] = ( a + b - ( 2 - nu ) * a * b ) / ( 1 - ( 1 - nu ) * a * b );
     }
     return set;
 }

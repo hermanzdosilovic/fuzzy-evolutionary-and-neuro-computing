@@ -3,7 +3,13 @@ project( fenc LANGUAGES CXX )
 
 set( CMAKE_CXX_STANDARD 17 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
-set( CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -pedantic -pedantic-errors" )
+
+set(
+    CMAKE_CXX_FLAGS
+    "${CMAKE_CXX_FLAGS} -Wall -Wextra \
+    -Wold-style-cast -Wuseless-cast -Wnull-dereference \
+    -Werror -Wfatal-errors -pedantic -pedantic-errors"
+)
 
 add_library( fenc INTERFACE )
 target_include_directories( fenc INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include )
