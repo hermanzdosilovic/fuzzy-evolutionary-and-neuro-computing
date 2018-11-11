@@ -1,7 +1,9 @@
+#include <fuzzy/complement.hpp>
+#include <fuzzy/conjunction.hpp>
+#include <fuzzy/disjunction.hpp>
 #include <fuzzy/function.hpp>
 #include <fuzzy/hamacher.hpp>
 #include <fuzzy/set.hpp>
-#include <fuzzy/zadeh.hpp>
 
 #include <iostream>
 
@@ -59,17 +61,17 @@ int main()
 
     std::cout << '\n';
 
-    fuzzy::Set notSet1 = fuzzy::zadeh::operator!( set1 );
+    fuzzy::Set notSet1 = fuzzy::complement( set1 );
     std::cout << "notSet1:\n" << notSet1 << '\n';
 
     std::cout << '\n';
 
-    fuzzy::Set unionSet{ fuzzy::zadeh::operator|( set1, notSet1 ) };
+    fuzzy::Set unionSet{ fuzzy::disjunction( set1, notSet1, fuzzy::SNormType::ZADEH_MAX ) };
     std::cout << "Set1 union notSet1:\n" << unionSet << '\n';
 
     std::cout << '\n';
 
-    fuzzy::Set intersectionSet{ fuzzy::zadeh::operator&( set1, notSet1 ) };
+    fuzzy::Set intersectionSet{ fuzzy::conjunction( set1, notSet1, fuzzy::TNormType::ZADEH_MIN ) };
     std::cout << "Set1 intersection notSet1:\n" << intersectionSet << '\n';
 
     std::cout << '\n';

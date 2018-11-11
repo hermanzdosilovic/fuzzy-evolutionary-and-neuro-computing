@@ -9,11 +9,16 @@ namespace fuzzy
 template< typename TNorm >
 Set conjunction( Set const & s1, Set const & s2, TNorm && t )
 {
-    Set result{ s1.domain() + s2.domain() };
+    Set result;
 
-    for ( auto const & e : result )
+    for ( auto const & [ k, v ] : s1 )
     {
-        result[ e ] = t( s1[ e ], s2[ e ] );
+        result[ k ] = t( v, s2[ k ] );
+    }
+
+    for ( auto const & [ k, v ] : s2 )
+    {
+        result[ k ] = t( s1[ k ], v );
     }
 
     return result;

@@ -6,21 +6,21 @@ namespace fuzzy
 {
 
 template< typename UnaryFunction >
-Set complement( Set const & s1, Set const & s2, UnaryFunction && f )
+Set complement( Set const & s, UnaryFunction && f )
 {
-    Set result{ s1.domain() + s2.domain() };
+    Set result{ s };
 
-    for ( auto const & e : result )
+    for ( auto const & [ k, v ] : result )
     {
-        result[ e ] = f( result[ e ] );
+        result[ k ] = f( v );
     }
 
     return result;
 }
 
-Set complement( Set const & s1, Set const & s2 )
+Set complement( Set const & s )
 {
-    return complement( s1, s2, []( double const x ){ return 1 - x; } );
+    return complement( s, []( double const x ){ return 1 - x; } );
 }
 
 }
