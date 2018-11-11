@@ -68,35 +68,37 @@ Relation composition( Relation const & r1, Relation const & r2, SNormType sNormT
     return composition( r1, r2, snorm( sNormType ), tnorm( tNormType ) );
 }
 
-Set concentration( Set const & s )
+template< typename Function >
+Set transform( Set const & s, Function && f )
 {
     Set result{ s };
     for ( auto & e : result )
     {
-        result[ e ] = std::pow( result[ e ], 2 );
+        result[ e ] = f( result[ e ] );
     }
     return result;
+}
+
+Set concentration( Set const & s )
+{
+    return transform( s, []( double const x ){ return std::pow( x, 2 ); } );
 }
 
 Set dilatation( Set const & s )
 {
-    Set result{ s };
-    for ( auto & e : result )
-    {
-        result[ e ] = std::sqrt( result[ e ] );
-    }
-    return result;
+    return transform( s, []( double const x ){ return std::sqrt( x ); } );
 }
 
 Set intensification( Set const & s )
 {
-    Set result{ s };
-    for ( auto & e : result )
-    {
-        auto x{ result[ e ] };
-        result[ e ] = ( ( x >= 0 && x <= 0.5 ) ? ( 2 * std::pow( x, 2 ) ) : ( 1 - 2 * std::pow( 1 - x, 2 ) ) );
-    }
-    return result;
+    return transform
+    (
+        s,
+        []( double const x )
+        {
+            return ( ( x >= 0 && x <= 0.5 ) ? ( 2 * std::pow( x, 2 ) ) : ( 1 - 2 * std::pow( 1 - x, 2 ) ) );
+        }
+    );
 }
 
 }
