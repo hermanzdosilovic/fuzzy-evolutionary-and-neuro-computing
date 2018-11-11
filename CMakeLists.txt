@@ -12,6 +12,7 @@ set(
 )
 
 add_library( fenc INTERFACE )
+target_link_libraries( fenc INTERFACE m )
 target_include_directories( fenc INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include )
 
 # add_library( fmt INTERFACE )

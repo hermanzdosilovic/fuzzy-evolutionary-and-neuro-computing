@@ -4,6 +4,9 @@
 #include <fuzzy/relation.hpp>
 #include <fuzzy/snorm.hpp>
 #include <fuzzy/tnorm.hpp>
+#include <fuzzy/set.hpp>
+
+#include <cmath>
 
 namespace fuzzy
 {
@@ -63,6 +66,37 @@ Relation composition( Relation const & r1, Relation const & r2, SNorm && s, TNor
 Relation composition( Relation const & r1, Relation const & r2, SNormType sNormType = SNormType::ZADEH_MAX, TNormType tNormType = TNormType::ZADEH_MIN )
 {
     return composition( r1, r2, snorm( sNormType ), tnorm( tNormType ) );
+}
+
+Set concentration( Set const & s )
+{
+    Set result{ s };
+    for ( auto & e : result )
+    {
+        result[ e ] = std::pow( result[ e ], 2 );
+    }
+    return result;
+}
+
+Set dilatation( Set const & s )
+{
+    Set result{ s };
+    for ( auto & e : result )
+    {
+        result[ e ] = std::sqrt( result[ e ] );
+    }
+    return result;
+}
+
+Set intensification( Set const & s )
+{
+    Set result{ s };
+    for ( auto & e : result )
+    {
+        auto x{ result[ e ] };
+        result[ e ] = ( ( x >= 0 && x <= 0.5 ) ? ( 2 * std::pow( x, 2 ) ) : ( 1 - 2 * std::pow( 1 - x, 2 ) ) );
+    }
+    return result;
 }
 
 }
