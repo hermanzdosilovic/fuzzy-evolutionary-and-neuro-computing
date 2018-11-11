@@ -6,7 +6,9 @@
 #include <fuzzy/tnorm.hpp>
 #include <fuzzy/set.hpp>
 
+#include <cassert>
 #include <cmath>
+#include <iterator>
 
 namespace fuzzy
 {
@@ -20,6 +22,24 @@ Relation cross( Relation const & r1, Relation const & r2, TNorm && t )
 Relation cross( Relation const & r1, Relation const & r2, TNormType const tNormType = TNormType::ZADEH_MIN )
 {
     return implication( r1, r2, tnorm( tNormType ) );
+}
+
+template< typename TNorm >
+Relation cross( Relations const & relations, TNorm && t )
+{
+    assert( std::size( relations ) > 0 );
+
+    Relation result{ relations[ 0 ] };
+    for ( std::size_t i{ 1 }; i < std::size( relations ); ++i )
+    {
+        result = cross( result, relations[ i ], t );
+    }
+    return result;
+}
+
+Relation cross( Relations const & relations, TNormType const tNormType = TNormType::ZADEH_MIN )
+{
+    return cross( relations, tnorm( tNormType ) );
 }
 
 template< typename SNorm, typename TNorm >
