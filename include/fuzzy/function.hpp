@@ -2,6 +2,8 @@
 
 #include <fuzzy/element.hpp>
 
+#include <iterator>
+
 namespace fuzzy
 {
 
@@ -69,6 +71,24 @@ auto pi( Element::value_type const alpha, Element::value_type const beta, Elemen
                if ( x < delta  ) { return ( delta - x ) / static_cast< double >( delta - gamma ); }
 
                return 0;
+           };
+}
+
+double universal( Element const & )
+{
+    return 1;
+}
+
+auto singleton( Element::value_type const value )
+{
+    return [ value ]
+           ( Element const & element ) -> double
+           {
+               if ( std::size( element ) == 0 || element[ 0 ] != value )
+               {
+                   return 0;
+               }
+                return 1;
            };
 }
 

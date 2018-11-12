@@ -61,11 +61,11 @@ public:
     {
         fuzzy::Element input;
         input += { leftDistance       };
-        //input += { rightDistance      };
+        input += { rightDistance      };
         //input += { upperLeftDistance  };
         //input += { upperRightDistance };
         //input += { speed              };
-        //input += { direction          };
+        input += { direction          };
 
         auto const accelerationOutput{ accelerationEngine_.predict( input, accelerationRelations_, accelerationResultDomain_ ) };
         auto const rudderOutput      { rudderEngine_      .predict( input, rudderRelations_      , rudderResultDomain_       ) };
