@@ -49,3 +49,6 @@ target_link_libraries( hw03t01 PRIVATE fenc )
 
 add_executable( hw03t03 ${CMAKE_CURRENT_LIST_DIR}/src/homework_03/task_03/main.cpp )
 target_link_libraries( hw03t03 PRIVATE fenc )
+
+add_executable( hw05f1generator ${CMAKE_CURRENT_LIST_DIR}/src/homework_05/data_generator/f1.cpp )
+target_link_libraries( hw05f1generator PRIVATE fenc )
