@@ -202,23 +202,13 @@ int main( int argc, char ** argv )
 
     constexpr auto epochs{ 100000 };
     constexpr auto logFrequency{ 100 };
-    constexpr auto antecedentRate{ 1 * 1e-5 };
-    constexpr auto consequentRate{ 1 * 1e-5 };
+    constexpr auto antecedentRate{ 5 * 1e-4 };
+    constexpr auto consequentRate{ 5 * 1e-4 };
 
     Parameters tmpParameters( numberOfRules );
 
     for ( auto epoch{ 1 }; epoch <= epochs; ++epoch )
     {
-        std::for_each
-        (
-            std::begin( tmpParameters ),
-            std::end  ( tmpParameters ),
-            []( auto & parameters )
-            {
-                std::fill( std::begin( parameters ), std::end( parameters ), 0 );
-            }
-        );
-
         for ( auto const & trainExample : trainingSet )
         {
             auto i{ 0 };
@@ -236,29 +226,29 @@ int main( int argc, char ** argv )
                 auto const q{ consequentRate * der * z * alphaQ( trainExample ) };
                 auto const r{ consequentRate * der * z * alphaR() };
 
-                tmpParameters[ i ][ 0 ] += a;
-                tmpParameters[ i ][ 1 ] += b;
-                tmpParameters[ i ][ 2 ] += c;
-                tmpParameters[ i ][ 3 ] += d;
-                tmpParameters[ i ][ 4 ] += p;
-                tmpParameters[ i ][ 5 ] += q;
-                tmpParameters[ i ][ 6 ] += r;
+                tmpParameters[ i ][ 0 ] = a;
+                tmpParameters[ i ][ 1 ] = b;
+                tmpParameters[ i ][ 2 ] = c;
+                tmpParameters[ i ][ 3 ] = d;
+                tmpParameters[ i ][ 4 ] = p;
+                tmpParameters[ i ][ 5 ] = q;
+                tmpParameters[ i ][ 6 ] = r;
 
                 ++i;
             }
-        }
 
-        auto i{ 0 };
-        for ( auto & ruleParameters : parametersForRules )
-        {
-            ruleParameters[ 0 ] -= tmpParameters[ i ][ 0 ];
-            ruleParameters[ 1 ] -= tmpParameters[ i ][ 1 ];
-            ruleParameters[ 2 ] -= tmpParameters[ i ][ 2 ];
-            ruleParameters[ 3 ] -= tmpParameters[ i ][ 3 ];
-            ruleParameters[ 4 ] -= tmpParameters[ i ][ 4 ];
-            ruleParameters[ 5 ] -= tmpParameters[ i ][ 5 ];
-            ruleParameters[ 6 ] -= tmpParameters[ i ][ 6 ];
-            ++i;
+            i = 0;
+            for ( auto & ruleParameters : parametersForRules )
+            {
+                ruleParameters[ 0 ] -= tmpParameters[ i ][ 0 ];
+                ruleParameters[ 1 ] -= tmpParameters[ i ][ 1 ];
+                ruleParameters[ 2 ] -= tmpParameters[ i ][ 2 ];
+                ruleParameters[ 3 ] -= tmpParameters[ i ][ 3 ];
+                ruleParameters[ 4 ] -= tmpParameters[ i ][ 4 ];
+                ruleParameters[ 5 ] -= tmpParameters[ i ][ 5 ];
+                ruleParameters[ 6 ] -= tmpParameters[ i ][ 6 ];
+                ++i;
+            }
         }
 
         double error{ 0 };
