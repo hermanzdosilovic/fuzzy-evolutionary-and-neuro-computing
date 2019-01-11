@@ -276,5 +276,10 @@ int main( int argc, char ** argv )
         }
     }
 
+    for ( auto const & trainExample : trainingSet )
+    {
+        std::cout << trainExample.x1 << ' ' << trainExample.x2 << ' ' << forward( parametersForRules, trainExample ) << '\n';
+    }
+
     return 0;
 }
