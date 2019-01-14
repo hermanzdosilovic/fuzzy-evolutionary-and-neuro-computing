@@ -11,8 +11,10 @@ set(
     -Werror -Wfatal-errors -pedantic -pedantic-errors"
 )
 
+add_subdirectory( ${CMAKE_CURRENT_LIST_DIR}/third_party/ecfcpp )
+
 add_library( fenc INTERFACE )
-target_link_libraries( fenc INTERFACE m )
+target_link_libraries( fenc INTERFACE ecfcpp m )
 target_include_directories( fenc INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include )
 
 # add_library( fmt INTERFACE )
@@ -49,6 +51,7 @@ target_link_libraries( hw03t01 PRIVATE fenc )
 
 add_executable( hw03t03 ${CMAKE_CURRENT_LIST_DIR}/src/homework_03/task_03/main.cpp )
 target_link_libraries( hw03t03 PRIVATE fenc )
+
 
 add_executable( hw05f1generator ${CMAKE_CURRENT_LIST_DIR}/src/homework_05/data_generator/f1.cpp )
 target_link_libraries( hw05f1generator PRIVATE fenc )
