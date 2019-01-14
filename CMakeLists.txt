@@ -61,3 +61,7 @@ target_link_libraries( hw06online_gradient_descent PRIVATE fenc )
 
 add_executable( hw06gradient_descent ${CMAKE_CURRENT_LIST_DIR}/src/homework_06/gradient_descent/main.cpp )
 target_link_libraries( hw06gradient_descent PRIVATE fenc )
+
+
+add_executable( hw07playground ${CMAKE_CURRENT_LIST_DIR}/src/homework_07/playground/main.cpp )
+target_link_libraries( hw07playground PRIVATE fenc )
