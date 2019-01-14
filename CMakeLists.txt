@@ -53,11 +53,11 @@ add_executable( hw03t03 ${CMAKE_CURRENT_LIST_DIR}/src/homework_03/task_03/main.c
 target_link_libraries( hw03t03 PRIVATE fenc )
 
 
-add_executable( hw05f1generator ${CMAKE_CURRENT_LIST_DIR}/src/homework_05/data_generator/f1.cpp )
-target_link_libraries( hw05f1generator PRIVATE fenc )
+add_executable( hw06f1generator ${CMAKE_CURRENT_LIST_DIR}/src/homework_06/data_generator/f1.cpp )
+target_link_libraries( hw06f1generator PRIVATE fenc )
 
-add_executable( hw05online_gradient_descent ${CMAKE_CURRENT_LIST_DIR}/src/homework_05/online_gradient_descent/main.cpp )
-target_link_libraries( hw05online_gradient_descent PRIVATE fenc )
+add_executable( hw06online_gradient_descent ${CMAKE_CURRENT_LIST_DIR}/src/homework_06/online_gradient_descent/main.cpp )
+target_link_libraries( hw06online_gradient_descent PRIVATE fenc )
 
-add_executable( hw05gradient_descent ${CMAKE_CURRENT_LIST_DIR}/src/homework_05/gradient_descent/main.cpp )
-target_link_libraries( hw05gradient_descent PRIVATE fenc )
+add_executable( hw06gradient_descent ${CMAKE_CURRENT_LIST_DIR}/src/homework_06/gradient_descent/main.cpp )
+target_link_libraries( hw06gradient_descent PRIVATE fenc )
