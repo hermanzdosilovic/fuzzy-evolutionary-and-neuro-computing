@@ -5,6 +5,7 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <initializer_list>
 #include <iterator>
 #include <numeric>
 #include <type_traits>
@@ -21,32 +22,32 @@ template
 class ResemblingNetwork
 {
 public:
-    ResemblingNetwork( std::vector< std::uint16_t > const & architecture ) : architecture_{ architecture }
+    ResemblingNetwork( std::initializer_list< std::uint16_t > const & architecture ) : architecture_{ architecture }
     {
-        assert( std::size( architecture ) > 0 );
-        for ( [[ maybe_unused ]] auto const numOfNeurons : architecture )
+        assert( std::size( architecture_ ) > 0 );
+        for ( [[ maybe_unused ]] auto const numOfNeurons : architecture_ )
         {
             assert( numOfNeurons > 0 );
         }
 
-        inputSize_  = architecture[ 0 ];
-        outputSize_ = architecture[ std::size( architecture ) - 1 ];
+        inputSize_  = architecture_[ 0 ];
+        outputSize_ = architecture_[ std::size( architecture_ ) - 1 ];
 
         std::size_t numOfWeights{ 0 };
-        if ( std::size( architecture ) > 1 )
+        if ( std::size( architecture_ ) > 1 )
         {
-            numOfWeights += 2 * architecture[ 1 ];
+            numOfWeights += 2 * architecture_[ 1 ];
         }
 
-        for ( std::size_t i{ 2 }; i < std::size( architecture ); ++i )
+        for ( std::size_t i{ 2 }; i < std::size( architecture_ ); ++i )
         {
-            numOfWeights += architecture[ i ] * architecture[ i - 1 ];
+            numOfWeights += architecture_[ i ] * architecture_[ i - 1 ];
         }
 
         weights_.resize( numOfWeights );
 
-        layerInput_ .resize( *std::max_element( std::begin( architecture ), std::end( architecture ) ) );
-        layerOutput_.resize( *std::max_element( std::begin( architecture ), std::end( architecture ) ) );
+        layerInput_ .resize( *std::max_element( std::begin( architecture_ ), std::end( architecture_ ) ) );
+        layerOutput_.resize( *std::max_element( std::begin( architecture_ ), std::end( architecture_ ) ) );
 
         networkOutput_.resize( outputSize_ );
     }
