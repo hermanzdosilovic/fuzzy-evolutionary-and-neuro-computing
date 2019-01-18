@@ -23,16 +23,16 @@ int main()
 
     constexpr std::size_t tournamentSize{ 3 };
 
-    constexpr float alpha{ 0.5 };
-    constexpr float lambda{ 1 };
+    constexpr float alpha { 0.4 };
+    constexpr float lambda{ 0.5 };
 
-    constexpr float mutationProbability1{ 0.1 };
-    constexpr float mutationProbability2{ 0.1 };
-    constexpr float mutationProbability3{ 0.3 };
+    constexpr float mutationProbability1{ 0.03 };
+    constexpr float mutationProbability2{ 0.02 };
+    constexpr float mutationProbability3{ 0.01 };
     constexpr bool  forceMutation{ true };
-    constexpr float sigma1{ 1 };
-    constexpr float sigma2{ 1 };
-    constexpr float sigma3{ 2 };
+    constexpr float sigma1{ 0.1 };
+    constexpr float sigma2{ 0.3 };
+    constexpr float sigma3{ 0.5 };
 
     constexpr auto logFrequency{ 100 };
 
@@ -54,19 +54,19 @@ int main()
             {
                 ecfcpp::crossover::BlxAlpha{ alpha },
                 ecfcpp::crossover::Arithmetical{ lambda },
-                ecfcpp::crossover::Uniform{}
+                ecfcpp::crossover::SinglePoint{},
             },
             ecfcpp::mutation::Composite< Chromosome >
             {
-                ecfcpp::mutation::Gaussian{ mutationProbability1, forceMutation, sigma1, ecfcpp::mutation::Gaussian::Type::Add },
-                ecfcpp::mutation::Gaussian{ mutationProbability2, forceMutation, sigma2, ecfcpp::mutation::Gaussian::Type::Add },
-                ecfcpp::mutation::Gaussian{ mutationProbability3, forceMutation, sigma3, ecfcpp::mutation::Gaussian::Type::Set }
+                { ecfcpp::mutation::Gaussian{ mutationProbability1, forceMutation, sigma1, ecfcpp::mutation::Gaussian::Type::Add }, 4 },
+                { ecfcpp::mutation::Gaussian{ mutationProbability2, forceMutation, sigma2, ecfcpp::mutation::Gaussian::Type::Add }, 4 },
+                { ecfcpp::mutation::Gaussian{ mutationProbability3, forceMutation, sigma3, ecfcpp::mutation::Gaussian::Type::Set }, 1 }
             },
             ecfcpp::factory::create
             (
-                Chromosome{ -1, 1 },
+                Chromosome{ -2, 2 },
                 populationSize,
-                []{ return ecfcpp::random::uniform( 0, 1 ); }
+                []{ return ecfcpp::random::uniform( -1, 1 ); }
             ),
             logFrequency
         )
