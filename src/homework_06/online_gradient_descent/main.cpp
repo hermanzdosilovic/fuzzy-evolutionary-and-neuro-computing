@@ -209,7 +209,7 @@ int main( int argc, char ** argv )
     }
 
     constexpr auto epochs{ 100000 };
-    constexpr auto logFrequency{ 0 };
+    constexpr auto logFrequency{ 1 };
     constexpr auto antecedentRate{ 1 * 1e-5 };
     constexpr auto consequentRate{ 1 * 1e-5 };
 
@@ -270,7 +270,8 @@ int main( int argc, char ** argv )
 
         if ( logFrequency > 0 && epoch % logFrequency == 0 )
         {
-            std::cout << "Epoch #" << epoch << ": MSE = " << error << '\n';
+            //std::cout << "Epoch #" << epoch << ": MSE = " << error << '\n';
+            std::cout << error << '\n';
         }
     }
 
@@ -284,10 +285,10 @@ int main( int argc, char ** argv )
     //}
 
     // Deviation from dataset. 
-    for ( auto const & trainExample : trainingSet )
-    {
-        std::cout << trainExample.x1 << ' ' << trainExample.x2 << ' ' << forward( parametersForRules, trainExample ) - trainExample.y << '\n';
-    }
+    //for ( auto const & trainExample : trainingSet )
+    //{
+    //    std::cout << trainExample.x1 << ' ' << trainExample.x2 << ' ' << forward( parametersForRules, trainExample ) - trainExample.y << '\n';
+    //}
 
     return 0;
 }
