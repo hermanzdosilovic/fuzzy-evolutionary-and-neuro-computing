@@ -274,13 +274,20 @@ int main( int argc, char ** argv )
         }
     }
 
-    for ( double x{ -4 }; x <= 4; x += 0.1 )
-    for ( double y{ -4 }; y <= 4; y += 0.1 )
-        std::cout << x << ' ' << y << ' ' << forward( parametersForRules, { x, y, 0 } ) << '\n';
-    //for ( auto const & trainExample : trainingSet )
+    // Learned function with sampling rate 0.1
+    //for ( auto x{ -4.0 }; x <= 4; x += 0.1 )
     //{
-    //    std::cout << trainExample.x1 << ' ' << trainExample.x2 << ' ' << forward( parametersForRules, trainExample ) << '\n';
+    //    for ( auto y{ -4.0 }; y <= 4; y += 0.1 )
+    //    {
+    //        std::cout << x << ' ' << y << ' ' << forward( parametersForRules, { x, y, 0 } ) << '\n';
+    //    }
     //}
+
+    // Deviation from dataset. 
+    for ( auto const & trainExample : trainingSet )
+    {
+        std::cout << trainExample.x1 << ' ' << trainExample.x2 << ' ' << forward( parametersForRules, trainExample ) - trainExample.y << '\n';
+    }
 
     return 0;
 }
