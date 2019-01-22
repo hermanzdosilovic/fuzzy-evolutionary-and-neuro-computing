@@ -208,7 +208,7 @@ int main( int argc, char ** argv )
     }
 
     constexpr auto epochs{ 100000 };
-    constexpr auto logFrequency{ 100 };
+    constexpr auto logFrequency{ 0 };
     constexpr auto antecedentRate{ 1 * 1e-5 };
     constexpr auto consequentRate{ 1 * 1e-5 };
 
@@ -282,6 +282,14 @@ int main( int argc, char ** argv )
             std::cout << "Epoch #" << epoch << ": MSE = " << error << '\n';
         }
     }
+
+    for ( double x{ -4 }; x <= 4; x += 0.1 )
+    for ( double y{ -4 }; y <= 4; y += 0.1 )
+        std::cout << x << ' ' << y << ' ' << forward( parametersForRules, { x, y, 0 } ) << '\n';
+    //for ( auto const & trainExample : trainingSet )
+    //{
+    //    std::cout << trainExample.x1 << ' ' << trainExample.x2 << ' ' << forward( parametersForRules, trainExample ) << '\n';
+    //}
 
     return 0;
 }
