@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstdint>
 #include <iostream>
+#include <iterator>
 #include <random>
 #include <string>
 #include <vector>
@@ -166,11 +167,13 @@ double shiftedAlphaSum( Parameters const & parametersForRules, Rule const & rule
 
 int main( int argc, char ** argv )
 {
-    std::uint8_t numberOfRules{ 2 };
-    if ( argc > 1 )
+    if ( argc != 3 )
     {
-        numberOfRules = std::stoi( argv[ 1 ] );
+        std::cout << "Expecting 2 arguments: numberOfRules and pathToDataset\n";
+        return -1;
     }
+
+    auto numberOfRules{ std::stoi( argv[ 1 ] ) };
 
     std::mt19937 randomGenerator{ std::random_device{}() };
     std::normal_distribution< double > normalDistribution{ 0, 1 };
@@ -187,7 +190,11 @@ int main( int argc, char ** argv )
     TrainingSet trainingSet;
     trainingSet.reserve( 100 );
 
-    std::freopen( "trainingSet.txt", "r", stdin );
+    if ( std::freopen( argv[ 2 ], "r", stdin ) == nullptr )
+    {
+        std::cout << "Cannot open file " << argv[ 2 ] << '\n';
+        return -1;
+    }
 
     while ( true )
     {
