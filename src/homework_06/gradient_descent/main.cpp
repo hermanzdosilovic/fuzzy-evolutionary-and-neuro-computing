@@ -278,7 +278,7 @@ int main( int argc, char ** argv )
         if ( logFrequency > 0 && epoch % logFrequency == 0 )
         {
             //std::cout << "Epoch #" << epoch << ": MSE = " << error << '\n';
-            std::cout << error << '\n';
+            //std::cout << error << '\n';
         }
     }
 
@@ -297,6 +297,10 @@ int main( int argc, char ** argv )
     //    std::cout << trainExample.x1 << ' ' << trainExample.x2 << ' ' << forward( parametersForRules, trainExample ) - trainExample.y << '\n';
     //}
 
+    for ( auto const & parameter : parametersForRules )
+    {
+        std::cout << parameter[ 0 ] << ' ' << parameter[ 1 ] << ' ' << parameter[ 2 ] << ' ' << parameter[ 3 ] << '\n';
+    }
 
     return 0;
 }
