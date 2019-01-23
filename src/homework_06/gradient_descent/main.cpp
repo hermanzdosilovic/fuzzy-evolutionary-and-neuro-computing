@@ -209,8 +209,8 @@ int main( int argc, char ** argv )
 
     constexpr auto epochs{ 100000 };
     constexpr auto logFrequency{ 1 };
-    constexpr auto antecedentRate{ 1 * 1e-8 };
-    constexpr auto consequentRate{ 1 * 1e-8 };
+    constexpr auto antecedentRate{ 1 * 1e-4 };
+    constexpr auto consequentRate{ 1 * 1e-4 };
 
     Parameters tmpParameters( numberOfRules );
 
