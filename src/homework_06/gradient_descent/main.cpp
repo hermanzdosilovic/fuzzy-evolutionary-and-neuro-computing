@@ -209,8 +209,8 @@ int main( int argc, char ** argv )
 
     constexpr auto epochs{ 100000 };
     constexpr auto logFrequency{ 1 };
-    constexpr auto antecedentRate{ 1 * 1e-5 };
-    constexpr auto consequentRate{ 1 * 1e-5 };
+    constexpr auto antecedentRate{ 1 * 1e-8 };
+    constexpr auto consequentRate{ 1 * 1e-8 };
 
     Parameters tmpParameters( numberOfRules );
 
@@ -272,10 +272,8 @@ int main( int argc, char ** argv )
         for ( auto const & trainExample : trainingSet )
         {
             auto const e{ ( forward( parametersForRules, trainExample ) - trainExample.y ) };
-            error += e * e;
+            error += e * e / std::size( trainingSet );
         }
-
-        error /= std::size( trainingSet );
 
         if ( logFrequency > 0 && epoch % logFrequency == 0 )
         {
